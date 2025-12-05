@@ -12,11 +12,11 @@ export function Navbar() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const navLinks = [
-    { name: 'Features', href: '#features' },
-    { name: 'Pricing', href: '#pricing' },
-    { name: 'About', href: '#about' },
-  ];
+const navLinks = [
+  { name: 'Home', href: '/' },
+  { name: 'About', href: '/about' },
+  { name: 'Share Experience', href: '/share-experience' },
+];
 
   return (
     <>
@@ -107,13 +107,17 @@ export function Navbar() {
           <div className="px-6 py-6 space-y-4 flex flex-col">
             {navLinks.map((link) => (
               <a
-                key={link.name}
-                href={link.href}
-                className="text-base font-medium text-slate-600 hover:text-purple-600 hover:pl-2 transition-all"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                {link.name}
-              </a>
+               key={link.name}
+  href={link.href}
+  onClick={(e) => {
+    e.preventDefault();
+    window.location.href = link.href;
+  }}
+  className="text-sm font-medium text-slate-600 hover:text-purple-600 transition-colors relative group"
+>
+  {link.name}
+  <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-purple-600 transition-all duration-300 group-hover:w-full" />
+</a>
             ))}
             <hr className="border-slate-100" />
             <div className="flex flex-col gap-3 pt-2">

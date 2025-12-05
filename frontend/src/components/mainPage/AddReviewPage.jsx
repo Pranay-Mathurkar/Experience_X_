@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Navbar } from '../common/Navbar';
+import { Footer } from '../common/Footer';
 
 export default function AddReviewPage() {
   const navigate = useNavigate();
@@ -36,6 +38,8 @@ export default function AddReviewPage() {
   };
 
   return (
+    <>
+    <Navbar />
     <div className="min-h-screen bg-slate-50 py-12 px-4 sm:px-6">
       <div className="max-w-2xl mx-auto">
         
@@ -137,5 +141,7 @@ export default function AddReviewPage() {
         </div>
       </div>
     </div>
+    <Footer />
+    </>
   );
 }

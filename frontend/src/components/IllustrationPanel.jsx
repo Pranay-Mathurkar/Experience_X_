@@ -8,7 +8,6 @@ export default function IllustrationPanel() {
         alt="Illustration"
       />
 
-      {/* Clouds */}
       <div className="absolute top-6 left-6 w-20 h-10 bg-white rounded-full opacity-80"></div>
       <div className="absolute bottom-10 right-10 w-24 h-12 bg-white rounded-full opacity-80"></div>
     </div>

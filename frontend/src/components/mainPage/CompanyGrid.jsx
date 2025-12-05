@@ -54,18 +54,18 @@ const companies = [
 export function CompanyGrid() {
   return (
     <div className="w-full py-20 px-4 sm:px-8 bg-slate-50/50">
-      
-      {/* --- Section Header --- */}
       <div className="max-w-7xl mx-auto mb-12 text-center">
         <h2 className="text-3xl md:text-4xl font-bold text-slate-900 tracking-tight">
-          Target <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-blue-600">Companies</span>
+          Target{" "}
+          <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-blue-600">
+            Companies
+          </span>
         </h2>
         <p className="mt-4 text-lg text-slate-600 max-w-2xl mx-auto">
           Curated interview experiences from the industry's top engineering teams.
         </p>
       </div>
 
-      {/* --- Grid Container --- */}
       <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {companies.map((company, index) => (
           <div
@@ -75,12 +75,9 @@ export function CompanyGrid() {
                        transition-all duration-300 ease-out cursor-pointer overflow-hidden
                        hover:-translate-y-1"
           >
-            {/* Hover Gradient Background (Subtle) */}
             <div className="absolute inset-0 bg-gradient-to-br from-transparent via-transparent to-purple-50/50 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
             <div className="relative z-10 flex flex-col h-full">
-              
-              {/* Header: Logo + Tag */}
               <div className="flex justify-between items-start mb-4">
                 <div className="w-12 h-12 rounded-xl bg-white border border-slate-100 shadow-sm flex items-center justify-center p-2 group-hover:scale-105 transition-transform duration-300">
                   <img
@@ -89,26 +86,21 @@ export function CompanyGrid() {
                     className="w-full h-full object-contain"
                   />
                 </div>
-                {/* Tag Badge */}
                 <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-slate-100 text-slate-600 group-hover:bg-purple-50 group-hover:text-purple-600 transition-colors">
                   {company.tag}
                 </span>
               </div>
 
-              {/* Company Name */}
               <h3 className="text-lg font-bold text-slate-800 group-hover:text-purple-700 transition-colors mb-2">
                 {company.name}
               </h3>
 
-              {/* Snippet Text */}
               <p className="text-sm text-slate-500 leading-relaxed mb-6">
                 {company.snippet}
               </p>
 
-              {/* Footer: View Details Link */}
               <div className="mt-auto flex items-center text-sm font-semibold text-slate-400 group-hover:text-purple-600 transition-colors">
                 <span>View Insights</span>
-                {/* Arrow Icon SVG */}
                 <svg 
                   xmlns="http://www.w3.org/2000/svg" 
                   width="16" 

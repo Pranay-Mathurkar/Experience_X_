@@ -3,6 +3,7 @@ import LoginPage from "./pages/LoginPage";
 import MainPage from "./pages/MainPage";
 import ShareExperienceForm from "./pages/ShareExperienceForm";
 import AboutPage from "./pages/AboutPage";
+import SignupPage from "./pages/SignupPage";
 
 export default function App() {
   return (

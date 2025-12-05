@@ -1,7 +1,8 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import LoginPage from "./pages/LoginPage";
 import MainPage from "./pages/MainPage";
-import AddReviewPage from "./components/mainPage/AddReviewPage";
+import ShareExperienceForm from "./pages/ShareExperienceForm";
+import AboutPage from "./pages/AboutPage";
 
 export default function App() {
   return (
@@ -9,7 +10,9 @@ export default function App() {
       <Routes>
         <Route path="/" element={<MainPage/>} />
         <Route path="/login" element={<LoginPage />} />
-        <Route path="/add-review" element={<AddReviewPage />} />
+        <Route path="/share-experience" element={<ShareExperienceForm />} />
+        <Route path="/signup" element={<SignupPage />} />
+        <Route path="/about" element={<AboutPage />} />
       </Routes>
     </BrowserRouter>
   );

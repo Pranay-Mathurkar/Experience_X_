@@ -1,5 +1,8 @@
 // src/components/LoginForm.jsx
 import { useState } from "react";
+import { Link } from "react-router-dom";
+
+
 
 export default function LoginForm() {
   const [email, setEmail] = useState("");
@@ -95,8 +98,22 @@ export default function LoginForm() {
         {loading ? "Signing in..." : "Sign In"}
       </button>
 
+      <button
+    type="button"
+    // onClick={handleGoogleLogin}
+    className="w-full flex items-center justify-center gap-3 p-3 border rounded-xl hover:bg-gray-100 transition"
+    >
+    <img
+    src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
+    alt="Google logo"
+    className="w-5 h-5"
+    />
+  <span className="font-semibold">Sign in with Google</span>
+</button>
+
+
       <p className="text-center text-sm">
-        Don't have an account? <a href="/signup" className="text-purple-600">Sign up</a>
+        Don't have an account? <Link to="/signup" href="/signup" className="text-purple-600">Sign up</Link>
       </p>
     </form>
   );

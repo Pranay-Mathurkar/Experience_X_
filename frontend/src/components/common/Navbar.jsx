@@ -24,13 +24,13 @@ export function Navbar() {
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ease-in-out ${
           scrolled
             ? 'bg-white/70 backdrop-blur-xl border-b border-purple-100/50 shadow-sm py-3'
-            : 'bg-white/50 backdrop-blur-md border-b border-transparent py-5' // Added slight bg to initial state for readability
+            : 'bg-white/50 backdrop-blur-md border-b border-transparent py-5'
         }`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-8">
           <div className="flex justify-between items-center">
             
-            {/* --- Logo Section --- */}
+       
             <div 
               className="flex items-center gap-3 cursor-pointer group" 
               onClick={() => window.location.href = "/"}
@@ -47,7 +47,7 @@ export function Navbar() {
               </span>
             </div>
 
-            {/* --- Desktop Navigation --- */}
+      
             <div className="hidden md:flex items-center gap-8">
               {navLinks.map((link) => (
                 <a
@@ -61,7 +61,7 @@ export function Navbar() {
               ))}
             </div>
 
-            {/* --- Action Buttons --- */}
+           
             <div className="hidden md:flex items-center gap-4">
               <button
                 onClick={() => (window.location.href = "/login")}
@@ -82,7 +82,6 @@ export function Navbar() {
               </button>
             </div>
 
-            {/* --- Mobile Toggle --- */}
             <div className="md:hidden">
               <button
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -98,7 +97,6 @@ export function Navbar() {
           </div>
         </div>
 
-        {/* --- Mobile Menu --- */}
         <div
           className={`md:hidden absolute top-full left-0 right-0 bg-white border-b border-purple-100 shadow-xl transition-all duration-300 ease-in-out overflow-hidden ${
             isMobileMenuOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
@@ -124,10 +122,9 @@ export function Navbar() {
         </div>
       </nav>
 
-      {/* --- SPACER DIV: Pushes your content down so the navbar doesn't cover it --- */}
+      
       <div className="h-20 md:h-24" aria-hidden="true" />
 
-      {/* Overlay for mobile menu */}
       {isMobileMenuOpen && (
         <div className="fixed inset-0 z-40 bg-black/20 backdrop-blur-sm md:hidden" onClick={() => setIsMobileMenuOpen(false)} style={{ top: '80px' }} />
       )}

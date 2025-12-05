@@ -7,12 +7,12 @@ export function Footer() {
     <footer className="w-full bg-slate-900 text-slate-300 py-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-8">
         
-        {/* --- Top Section: Grid Layout --- */}
+       
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
           
-          {/* Column 1: Brand & Description */}
+      
           <div className="space-y-4">
-            {/* Logo (Consistent with Navbar) */}
+       
             <div className="flex items-center gap-2 cursor-pointer group w-fit">
               <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-gradient-to-tr from-purple-600 to-indigo-600 text-white shadow-lg shadow-purple-900/20">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" className="text-white/90">
@@ -29,7 +29,7 @@ export function Footer() {
             </p>
           </div>
 
-          {/* Column 2: Quick Links */}
+   
           <div>
             <h3 className="text-white font-semibold mb-4 tracking-wide">Platform</h3>
             <ul className="space-y-3 text-sm">
@@ -40,7 +40,7 @@ export function Footer() {
             </ul>
           </div>
 
-          {/* Column 3: Resources */}
+   
           <div>
             <h3 className="text-white font-semibold mb-4 tracking-wide">Resources</h3>
             <ul className="space-y-3 text-sm">
@@ -51,7 +51,7 @@ export function Footer() {
             </ul>
           </div>
 
-          {/* Column 4: Newsletter */}
+ 
           <div>
             <h3 className="text-white font-semibold mb-4 tracking-wide">Stay Updated</h3>
             <p className="text-xs text-slate-400 mb-4">
@@ -70,15 +70,14 @@ export function Footer() {
           </div>
         </div>
 
-        {/* --- Divider --- */}
+  
         <div className="border-t border-slate-800 my-8"></div>
 
-        {/* --- Bottom Section: Copyright & Socials --- */}
+ 
         <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-slate-500">
           
           <p>© {currentYear} Interview Archive. All rights reserved.</p>
 
-          {/* Social Icons (SVGs) */}
           <div className="flex items-center gap-6">
             <a href="#" className="hover:text-white transition-colors" aria-label="Twitter">
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-12.7 12.5S.2 5.3 7.8 4.5c2.1-.2 3.2-.4 4.4 1.2 1.6-1.3 3.2-2.5 4.8-1.2"/></svg>

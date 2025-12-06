@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import exLogo from "../assets/experience-x-logo.png"; 
-// 👆 change path if your file is somewhere else
+
 
 const initialRound = { roundType: "", mode: "", difficulty: "", questions: "" };
 

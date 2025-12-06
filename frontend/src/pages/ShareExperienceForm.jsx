@@ -1,10 +1,14 @@
-import React, { useState } from "react";
-import exLogo from "../assets/experience-x-logo.png"; 
-// 👆 change path if your file is somewhere else
+import React, { useState, useEffect } from "react";
+import exLogo from "../assets/experience-x-logo.png";
+import { useAuth } from "../contexts/AuthContext"; // 👈 import context
+import { useNavigate } from "react-router-dom";
 
 const initialRound = { roundType: "", mode: "", difficulty: "", questions: "" };
 
 export default function ShareExperiencePage() {
+  const { user, token, isAuthenticated } = useAuth(); // 👈 get auth
+  const navigate = useNavigate();
+
   const [form, setForm] = useState({
     company: "",
     role: "",
@@ -19,20 +23,23 @@ export default function ShareExperiencePage() {
     stocks: "",
     mainExperience: "",
     tips: "",
-    rounds: [{ ...initialRound }],
+    rounds: [initialRound],
   });
 
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
 
-  // Resume state
   const [resumeFile, setResumeFile] = useState(null);
   const [resumeName, setResumeName] = useState("");
 
-  // Coding Links state
-  const [codingLinks, setCodingLinks] = useState([
-    { platform: "", url: "" }
-  ]);
+  const [codingLinks, setCodingLinks] = useState([{ platform: "", url: "" }]);
+
+  // // if not logged in, send to login (or show message)
+  // useEffect(() => {
+  //   if (!isAuthenticated) {
+  //     navigate("/login");
+  //   }
+  // }, [isAuthenticated, navigate]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -59,10 +66,9 @@ export default function ShareExperiencePage() {
     }));
   };
 
-  // Coding Links handlers
   const handleCodingLinkChange = (index, e) => {
     const { name, value } = e.target;
-    setCodingLinks(prev => {
+    setCodingLinks((prev) => {
       const next = [...prev];
       next[index] = { ...next[index], [name]: value };
       return next;
@@ -70,14 +76,13 @@ export default function ShareExperiencePage() {
   };
 
   const addCodingLink = () => {
-    setCodingLinks(prev => [...prev, { platform: "", url: "" }]);
+    setCodingLinks((prev) => [...prev, { platform: "", url: "" }]);
   };
 
   const removeCodingLink = (index) => {
-    setCodingLinks(prev => prev.filter((_, i) => i !== index));
+    setCodingLinks((prev) => prev.filter((_, i) => i !== index));
   };
 
-  // Handle resume
   const handleResumeChange = (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -93,69 +98,41 @@ export default function ShareExperiencePage() {
   const handleSubmit = async () => {
     setError("");
 
-    // Basic required validation
     if (!form.company || !form.role || !form.mainExperience) {
       setError("Company, Role and Main Experience are required.");
+      return;
+    }
+
+    if (!token) {
+      setError("You must be logged in to submit.");
       return;
     }
 
     try {
       setSubmitting(true);
 
-      // ---------- Build FormData (for file + other fields) ----------
-      const formData = new FormData();
-
-      // Basic fields
-      formData.append("company", form.company);
-      formData.append("role", form.role);
-      formData.append("location", form.location);
-      formData.append("season", form.season);
-      formData.append("interviewType", form.interviewType);
-      formData.append("offerStatus", form.offerStatus);
-      formData.append("overallDifficulty", form.overallDifficulty);
-      formData.append("stipend", form.stipend);
-      formData.append("baseSalary", form.baseSalary);
-      formData.append("stocks", form.stocks);
-      formData.append("mainExperience", form.mainExperience);
-      formData.append("tips", form.tips);
-
-      // Tags: store as JSON array string
-      const tagsArray = form.tags
-        .split(",")
-        .map((t) => t.trim())
-        .filter(Boolean);
-      formData.append("tags", JSON.stringify(tagsArray));
-
-      // Rounds: send as JSON string
-      formData.append("rounds", JSON.stringify(form.rounds));
-
-      // Coding links: filter out empty urls, send as JSON string
-      const cleanedCodingLinks = codingLinks.filter(
-        (l) => l.url.trim() !== ""
-      );
-      formData.append("codingLinks", JSON.stringify(cleanedCodingLinks));
-
-      // Resume file (optional)
-      if (resumeFile) {
-        formData.append("resume", resumeFile);
-      }
-
-      // ---------- Send to backend ----------
-      const res = await fetch("https://your-backend.com/api/interviews", {
+      const res = await fetch("http://localhost:8000/api/v1/interviews", {
         method: "POST",
-        // ❗ Don't set Content-Type here, browser will handle multipart boundary
-        body: formData,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`, // 👈 send token
+        },
+        body: JSON.stringify({
+          ...form,
+          tags: form.tags
+            .split(",")
+            .map((t) => t.trim())
+            .filter(Boolean),
+          codingLinks: codingLinks.filter((l) => l.url.trim() !== ""),
+          userId: user?._id || user?.id, // optional: link to user
+        }),
       });
 
-      if (!res.ok) {
-        const text = await res.text().catch(() => "");
-        console.error("Submit error response:", text);
-        throw new Error("Failed to submit. Please try again.");
-      }
+      if (!res.ok) throw new Error("Failed to submit");
 
+      setSubmitting(false);
       alert("Submitted successfully!");
 
-      // Reset form
       setForm({
         company: "",
         role: "",
@@ -170,20 +147,16 @@ export default function ShareExperiencePage() {
         stocks: "",
         mainExperience: "",
         tips: "",
-        rounds: [{ ...initialRound }],
+        rounds: [initialRound],
       });
       setCodingLinks([{ platform: "", url: "" }]);
       setResumeFile(null);
       setResumeName("");
-
-      setSubmitting(false);
     } catch (err) {
-      console.error(err);
       setSubmitting(false);
-      setError(err.message || "Something went wrong");
+      setError(err.message);
     }
   };
-
   return (
     <div className="min-h-screen bg-slate-50 py-12 px-4 sm:px-6">
       <div className="max-w-4xl mx-auto">

@@ -1,9 +1,9 @@
 import { useState } from "react";
-import { useAuth } from "../contexts/AuthContext"; // Adjust the import path as needed
+import { useAuth } from "../contexts/AuthContext"; // make sure path matches your project
 
 export default function SignupForm() {
   const { handleSignUp } = useAuth();
-  
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [name, setName] = useState("");
@@ -24,7 +24,7 @@ export default function SignupForm() {
   async function handleSubmit(e) {
     e.preventDefault();
     setError(null);
-    
+
     const v = validate();
     if (v) {
       setError(v);
@@ -34,9 +34,10 @@ export default function SignupForm() {
     setLoading(true);
 
     try {
+      // AuthContext will call backend, store JWT, set user, and navigate
       await handleSignUp(name, email, password);
     } catch (err) {
-      setError(err.response?.data?.message || err.message || "Something went wrong");
+      setError(err.message || "Something went wrong");
     } finally {
       setLoading(false);
     }
@@ -67,11 +68,11 @@ export default function SignupForm() {
             </button>
 
             <div className="relative flex items-center py-2">
-              <div className="flex-grow border-t border-slate-200"></div>
+              <div className="flex-grow border-t border-slate-200" />
               <span className="flex-shrink-0 mx-4 text-xs text-slate-400 font-medium uppercase">
                 Or continue with
               </span>
-              <div className="flex-grow border-t border-slate-200"></div>
+              <div className="flex-grow border-t border-slate-200" />
             </div>
 
             {error && (
@@ -82,7 +83,9 @@ export default function SignupForm() {
 
             {/* Full Name */}
             <div className="space-y-1.5">
-              <label className="block text-sm font-semibold text-slate-700">Full Name</label>
+              <label className="block text-sm font-semibold text-slate-700">
+                Full Name
+              </label>
               <div className="relative">
                 <input
                   type="text"
@@ -96,7 +99,9 @@ export default function SignupForm() {
 
             {/* Email */}
             <div className="space-y-1.5">
-              <label className="block text-sm font-semibold text-slate-700">Email</label>
+              <label className="block text-sm font-semibold text-slate-700">
+                Email
+              </label>
               <div className="relative">
                 <input
                   type="email"
@@ -110,7 +115,9 @@ export default function SignupForm() {
 
             {/* Password */}
             <div className="space-y-1.5">
-              <label className="block text-sm font-semibold text-slate-700">Password</label>
+              <label className="block text-sm font-semibold text-slate-700">
+                Password
+              </label>
               <div className="relative">
                 <input
                   type={showPassword ? "text" : "password"}

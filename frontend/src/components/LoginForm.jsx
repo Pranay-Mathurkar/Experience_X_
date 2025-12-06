@@ -188,7 +188,7 @@ export default function AuthForm() {
               </div>
             </div>
 
-          
+{/*           
             <div className={`overflow-hidden transition-all duration-300 ease-in-out ${isLogin ? 'max-h-10 opacity-100' : 'max-h-0 opacity-0'}`}>
               <div className="flex items-center justify-between text-sm mt-2">
                 <label className="flex items-center gap-2 cursor-pointer group">
@@ -199,7 +199,9 @@ export default function AuthForm() {
                   Forgot password?
                 </a>
               </div>
-            </div>
+            </div> */
+            
+            }
 
             <button
               type="submit"

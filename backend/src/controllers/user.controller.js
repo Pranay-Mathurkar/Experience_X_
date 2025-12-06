@@ -1,8 +1,59 @@
 import httpStatus from "http-status";
 import bcrypt from "bcrypt";
-import crypto from "crypto";
-
+import jwt from "jsonwebtoken";
 import { User } from "../models/user.model.js";
+
+
+
+
+
+const signup = async (req, res) => {
+  const { name, email, password } = req.body;
+
+  if (!name || !email || !password) {
+    return res
+      .status(httpStatus.BAD_REQUEST)
+      .json({ message: "Please fill all required fields" });
+  }
+
+  try {
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res
+        .status(httpStatus.CONFLICT)
+        .json({ message: "User already exists" });
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const newUser = await User.create({
+      name,
+      email,
+      password: hashedPassword,
+    });
+
+    const token = jwt.sign(
+      { id: newUser._id, email: newUser.email },
+      process.env.JWT_SECRET,
+      { expiresIn: process.env.JWT_EXPIRES_IN }
+    );
+
+    res.status(httpStatus.CREATED).json({
+      message: "Signup successful",
+      token,
+      user: {
+        id: newUser._id,
+        name: newUser.name,
+        email: newUser.email,
+      },
+    });
+  } catch (e) {
+    res
+      .status(httpStatus.INTERNAL_SERVER_ERROR)
+      .json({ message: `Something went wrong: ${e.message}` });
+  }
+};
+
 
 
 
@@ -31,15 +82,23 @@ const login = async (req, res) => {
         .json({ message: "Invalid email or password" });
     }
 
-    const token = crypto.randomBytes(20).toString("hex");
-    user.token = token;
-    await user.save();
+    const token = jwt.sign(
+      { id: user._id, email: user.email },
+      process.env.JWT_SECRET,
+      { expiresIn: process.env.JWT_EXPIRES_IN }
+    );
 
     return res.status(httpStatus.OK).json({
       message: "Login successful",
       token,
-            user: { id: user._id, username: user.username, name: user.name },
+      user: {
+        id: user._id,
+        name: user.name,
+        username: user.username,
+        email: user.email,
+      },
     });
+
   } catch (e) {
     return res
       .status(httpStatus.INTERNAL_SERVER_ERROR)
@@ -47,6 +106,7 @@ const login = async (req, res) => {
   }
 };
 
-export {
-  login,
+export { 
+signup,
+login, 
 };

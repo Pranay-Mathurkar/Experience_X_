@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const companies = [
   {
@@ -52,6 +53,8 @@ const companies = [
 ];
 
 export function CompanyGrid() {
+  const navigate = useNavigate();
+
   return (
     <div className="w-full py-20 px-4 sm:px-8 bg-slate-50/50">
       <div className="max-w-7xl mx-auto mb-12 text-center">
@@ -70,6 +73,7 @@ export function CompanyGrid() {
         {companies.map((company, index) => (
           <div
             key={index}
+            onClick={() => navigate(`/company/${company.name.toLowerCase()}`)}
             className="group relative bg-white rounded-2xl p-6 border border-slate-200 
                        hover:border-purple-200 shadow-sm hover:shadow-xl hover:shadow-purple-500/10 
                        transition-all duration-300 ease-out cursor-pointer overflow-hidden

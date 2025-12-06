@@ -32,9 +32,9 @@ export const AuthProvider = ({ children }) => {
   }, [user]);
 
   // -------- REGISTER ----------
-  const handleRegister = async (name, email, password) => {
+  const handleSignUp = async (name, email, password) => {
     try {
-      const res = await client.post("/register", { name, email, password });
+      const res = await client.post("/SignUp", { name, email, password });
 
       if (res.status === 200 || res.status === 201) {
         localStorage.setItem("token", res.data.token);
@@ -42,7 +42,7 @@ export const AuthProvider = ({ children }) => {
         navigate("/login"); // after register go to login page
       }
     } catch (err) {
-      console.error("Register failed:", err);
+      console.error("SignUp failed:", err);
       throw err;
     }
   };
@@ -73,7 +73,7 @@ export const AuthProvider = ({ children }) => {
 
   const value = {
     user,
-    handleRegister,
+    handleSignUp,
     handleLogin,
     handleLogout,
   };

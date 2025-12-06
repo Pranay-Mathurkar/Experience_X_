@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useAuth } from "../contexts/AuthContext"; // Adjust the import path as needed
 
 export default function SignupForm() {
-  const { handleRegister } = useAuth();
+  const { handleSignUp } = useAuth();
   
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -34,7 +34,7 @@ export default function SignupForm() {
     setLoading(true);
 
     try {
-      await handleRegister(name, email, password);
+      await handleSignUp(name, email, password);
     } catch (err) {
       setError(err.response?.data?.message || err.message || "Something went wrong");
     } finally {

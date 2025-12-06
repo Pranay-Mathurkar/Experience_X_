@@ -19,7 +19,7 @@ export default function ShareExperiencePage() {
     stocks: "",
     mainExperience: "",
     tips: "",
-    rounds: [initialRound],
+    rounds: [{ ...initialRound }],
   });
 
   const [submitting, setSubmitting] = useState(false);
@@ -93,6 +93,7 @@ export default function ShareExperiencePage() {
   const handleSubmit = async () => {
     setError("");
 
+    // Basic required validation
     if (!form.company || !form.role || !form.mainExperience) {
       setError("Company, Role and Main Experience are required.");
       return;
@@ -101,23 +102,59 @@ export default function ShareExperiencePage() {
     try {
       setSubmitting(true);
 
+      // ---------- Build FormData (for file + other fields) ----------
+      const formData = new FormData();
+
+      // Basic fields
+      formData.append("company", form.company);
+      formData.append("role", form.role);
+      formData.append("location", form.location);
+      formData.append("season", form.season);
+      formData.append("interviewType", form.interviewType);
+      formData.append("offerStatus", form.offerStatus);
+      formData.append("overallDifficulty", form.overallDifficulty);
+      formData.append("stipend", form.stipend);
+      formData.append("baseSalary", form.baseSalary);
+      formData.append("stocks", form.stocks);
+      formData.append("mainExperience", form.mainExperience);
+      formData.append("tips", form.tips);
+
+      // Tags: store as JSON array string
+      const tagsArray = form.tags
+        .split(",")
+        .map((t) => t.trim())
+        .filter(Boolean);
+      formData.append("tags", JSON.stringify(tagsArray));
+
+      // Rounds: send as JSON string
+      formData.append("rounds", JSON.stringify(form.rounds));
+
+      // Coding links: filter out empty urls, send as JSON string
+      const cleanedCodingLinks = codingLinks.filter(
+        (l) => l.url.trim() !== ""
+      );
+      formData.append("codingLinks", JSON.stringify(cleanedCodingLinks));
+
+      // Resume file (optional)
+      if (resumeFile) {
+        formData.append("resume", resumeFile);
+      }
+
+      // ---------- Send to backend ----------
       const res = await fetch("https://your-backend.com/api/interviews", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          ...form,
-          tags: form.tags
-            .split(",")
-            .map((t) => t.trim())
-            .filter(Boolean),
-          codingLinks: codingLinks.filter(l => l.url.trim() !== ""),
-        }),
+        // ❗ Don't set Content-Type here, browser will handle multipart boundary
+        body: formData,
       });
 
-      if (!res.ok) throw new Error("Failed to submit");
+      if (!res.ok) {
+        const text = await res.text().catch(() => "");
+        console.error("Submit error response:", text);
+        throw new Error("Failed to submit. Please try again.");
+      }
 
-      setSubmitting(false);
       alert("Submitted successfully!");
+
       // Reset form
       setForm({
         company: "",
@@ -133,14 +170,17 @@ export default function ShareExperiencePage() {
         stocks: "",
         mainExperience: "",
         tips: "",
-        rounds: [initialRound],
+        rounds: [{ ...initialRound }],
       });
       setCodingLinks([{ platform: "", url: "" }]);
       setResumeFile(null);
       setResumeName("");
-    } catch (err) {
+
       setSubmitting(false);
-      setError(err.message);
+    } catch (err) {
+      console.error(err);
+      setSubmitting(false);
+      setError(err.message || "Something went wrong");
     }
   };
 
@@ -162,10 +202,8 @@ export default function ShareExperiencePage() {
         <div className="bg-white p-6 md:p-10 rounded-2xl shadow-xl shadow-slate-200/60 border border-slate-100">
 
           {/* Header */}
-         <div className="mb-8">
-  <div className="flex items-center justify-between gap-6 rounded-2xl bg-gradient-to-br from-purple-50/80 via-indigo-50/60 to-blue-50/50 px-8 py-8 relative overflow-hidden">
-
-              
+          <div className="mb-8">
+            <div className="flex items-center justify-between gap-6 rounded-2xl bg-gradient-to-br from-purple-50/80 via-indigo-50/60 to-blue-50/50 px-8 py-8 relative overflow-hidden">
               <div className="relative z-10 flex-1 max-w-3xl">
                 <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/90 text-[11px] font-bold uppercase tracking-wider text-purple-600 mb-4">
                   <span className="w-2 h-2 rounded-full bg-purple-600" />
@@ -182,18 +220,16 @@ export default function ShareExperiencePage() {
                 </p>
               </div>
 
-              {/* Logo - Aligned to top right */}
-             {/* Logo - Centered vertically on the right */}
-<div className="relative z-10 flex items-center justify-center shrink-0 self-center">
-  <div className="w-28 h-28 md:w-36 md:h-36 flex items-center justify-center">
-    <img
-      src={exLogo}
-      alt="Experience X Logo"
-      className="w-full h-full object-contain drop-shadow-lg"
-    />
-  </div>
-</div>
-
+              {/* Logo - Centered vertically on the right */}
+              <div className="relative z-10 flex items-center justify-center shrink-0 self-center">
+                <div className="w-28 h-28 md:w-36 md:h-36 flex items-center justify-center">
+                  <img
+                    src={exLogo}
+                    alt="Experience X Logo"
+                    className="w-full h-full object-contain drop-shadow-lg"
+                  />
+                </div>
+              </div>
             </div>
           </div>
 

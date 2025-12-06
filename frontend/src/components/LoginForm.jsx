@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext"; // Adjust the import path as needed
 
 export default function AuthForm() {
-  const { handleLogin, handleRegister } = useAuth();
+  const { handleLogin, handleSignUp } = useAuth();
   
   const [isLogin, setIsLogin] = useState(true); 
   const [loading, setLoading] = useState(false);
@@ -40,7 +40,7 @@ export default function AuthForm() {
       if (isLogin) {
         await handleLogin(email, password);
       } else {
-        await handleRegister(name, email, password);
+        await handleSignUp(name, email, password);
       }
     } catch (err) {
       setError(err.response?.data?.message || err.message || "Something went wrong");

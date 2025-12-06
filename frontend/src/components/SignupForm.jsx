@@ -1,6 +1,9 @@
 import { useState } from "react";
+import { useAuth } from "../contexts/AuthContext"; // Adjust the import path as needed
 
 export default function SignupForm() {
+  const { handleRegister } = useAuth();
+  
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [name, setName] = useState("");
@@ -21,6 +24,7 @@ export default function SignupForm() {
   async function handleSubmit(e) {
     e.preventDefault();
     setError(null);
+    
     const v = validate();
     if (v) {
       setError(v);
@@ -28,17 +32,11 @@ export default function SignupForm() {
     }
 
     setLoading(true);
-    const payload = { name, email, password };
 
     try {
-      console.log("Signing up:", payload);
-
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1500));
-
-      window.location.href = "/dashboard";
+      await handleRegister(name, email, password);
     } catch (err) {
-      setError(err.message || "Something went wrong");
+      setError(err.response?.data?.message || err.message || "Something went wrong");
     } finally {
       setLoading(false);
     }

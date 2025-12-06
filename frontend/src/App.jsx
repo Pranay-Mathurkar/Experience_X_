@@ -4,10 +4,11 @@ import MainPage from "./pages/MainPage";
 import ShareExperienceForm from "./pages/ShareExperienceForm";
 import AboutPage from "./pages/AboutPage";
 import SignupPage from "./pages/SignupPage";
-
+import { AuthProvider } from "./contexts/AuthContext";
 export default function App() {
   return (
     <BrowserRouter>
+     <AuthProvider>
       <Routes>
         <Route path="/" element={<MainPage/>} />
         <Route path="/login" element={<LoginPage />} />
@@ -15,6 +16,7 @@ export default function App() {
         <Route path="/signup" element={<SignupPage />} />
         <Route path="/about" element={<AboutPage />} />
       </Routes>
+      </AuthProvider>
     </BrowserRouter>
   );
 }

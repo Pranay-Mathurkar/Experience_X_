@@ -1,11 +1,13 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { useAuth } from "../contexts/AuthContext"; // Adjust the import path as needed
 
 export default function AuthForm() {
+  const { handleLogin, handleRegister } = useAuth();
+  
   const [isLogin, setIsLogin] = useState(true); 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -25,6 +27,7 @@ export default function AuthForm() {
   async function handleSubmit(e) {
     e.preventDefault();
     setError(null);
+    
     const v = validate();
     if (v) {
       setError(v);
@@ -32,22 +35,15 @@ export default function AuthForm() {
     }
 
     setLoading(true);
-   
-    const endpoint = isLogin ? "/api/login" : "/api/signup";
-    const payload = isLogin ? { email, password } : { name, email, password };
 
     try {
-      
-      console.log(`Submitting to ${endpoint}`, payload);
-      
-     
-      await new Promise(resolve => setTimeout(resolve, 1500)); 
-
-      
-      window.location.href = "/dashboard";
-      
+      if (isLogin) {
+        await handleLogin(email, password);
+      } else {
+        await handleRegister(name, email, password);
+      }
     } catch (err) {
-      setError(err.message || "Something went wrong");
+      setError(err.response?.data?.message || err.message || "Something went wrong");
     } finally {
       setLoading(false);
     }
@@ -55,7 +51,6 @@ export default function AuthForm() {
 
   return (
     <div className="w-full max-w-md mx-auto">
-      
       
       <Link 
         to="/" 
@@ -67,10 +62,8 @@ export default function AuthForm() {
 
       <div className="bg-white rounded-2xl shadow-xl shadow-slate-200/50 overflow-hidden border border-slate-100">
         
-       
         <div className="p-2">
           <div className="relative flex w-full p-1 bg-slate-100 rounded-xl">
-           
             <div 
               className={`absolute inset-y-1 w-[calc(50%-4px)] bg-white shadow-sm rounded-lg transition-all duration-300 ease-out z-0
               ${isLogin ? 'left-1' : 'left-[calc(50%+2px)]'}`} 
@@ -93,7 +86,6 @@ export default function AuthForm() {
 
         <div className="px-8 pb-8 pt-4">
           
-          
           <div className="text-center mb-6">
             <h2 className="text-2xl font-bold text-slate-900">
               {isLogin ? "Welcome back" : "Create an account"}
@@ -104,7 +96,6 @@ export default function AuthForm() {
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-4">
-            
             
             <button
               type="button"
@@ -119,12 +110,12 @@ export default function AuthForm() {
               <span className="flex-shrink-0 mx-4 text-xs text-slate-400 font-medium uppercase">Or continue with</span>
               <div className="flex-grow border-t border-slate-200"></div>
             </div>
+
             {error && (
               <div className="p-3 text-sm text-red-600 bg-red-50 border border-red-100 rounded-lg animate-fadeIn">
                 {error}
               </div>
             )}
-
 
             <div className={`overflow-hidden transition-all duration-300 ease-in-out ${isLogin ? 'max-h-0 opacity-0' : 'max-h-24 opacity-100'}`}>
               <div className="space-y-1.5 pb-4">
@@ -143,7 +134,6 @@ export default function AuthForm() {
                 </div>
               </div>
             </div>
-
 
             <div className="space-y-1.5">
               <label className="block text-sm font-semibold text-slate-700">Email</label>
@@ -187,9 +177,6 @@ export default function AuthForm() {
                 </button>
               </div>
             </div>
-
-          
-        
 
             <button
               type="submit"

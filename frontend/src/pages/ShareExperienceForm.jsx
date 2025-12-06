@@ -1,10 +1,14 @@
 import React, { useState } from "react";
-import exLogo from "../assets/experience-x-logo.png"; 
-
+import exLogo from "../assets/experience-x-logo.png";
+import { useAuth } from "../contexts/AuthContext"; 
+import { useNavigate } from "react-router-dom";
 
 const initialRound = { roundType: "", mode: "", difficulty: "", questions: "" };
 
 export default function ShareExperiencePage() {
+  const { user, token } = useAuth(); 
+  const navigate = useNavigate();
+
   const [form, setForm] = useState({
     company: "",
     role: "",
@@ -25,14 +29,12 @@ export default function ShareExperiencePage() {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
 
-  // Resume state
   const [resumeFile, setResumeFile] = useState(null);
   const [resumeName, setResumeName] = useState("");
 
-  // Coding Links state
-  const [codingLinks, setCodingLinks] = useState([
-    { platform: "", url: "" }
-  ]);
+  const [codingLinks, setCodingLinks] = useState([{ platform: "", url: "" }]);
+
+  // ---------------- HANDLERS ----------------
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -59,10 +61,9 @@ export default function ShareExperiencePage() {
     }));
   };
 
-  // Coding Links handlers
   const handleCodingLinkChange = (index, e) => {
     const { name, value } = e.target;
-    setCodingLinks(prev => {
+    setCodingLinks((prev) => {
       const next = [...prev];
       next[index] = { ...next[index], [name]: value };
       return next;
@@ -70,14 +71,13 @@ export default function ShareExperiencePage() {
   };
 
   const addCodingLink = () => {
-    setCodingLinks(prev => [...prev, { platform: "", url: "" }]);
+    setCodingLinks((prev) => [...prev, { platform: "", url: "" }]);
   };
 
   const removeCodingLink = (index) => {
-    setCodingLinks(prev => prev.filter((_, i) => i !== index));
+    setCodingLinks((prev) => prev.filter((_, i) => i !== index));
   };
 
-  // Handle resume
   const handleResumeChange = (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -90,6 +90,8 @@ export default function ShareExperiencePage() {
     setResumeName("");
   };
 
+  // ---------------- SUBMIT ----------------
+
   const handleSubmit = async () => {
     setError("");
 
@@ -98,27 +100,39 @@ export default function ShareExperiencePage() {
       return;
     }
 
+    if (!token) {
+      setError("You must be logged in to submit.");
+      return;
+    }
+
     try {
       setSubmitting(true);
 
-      const res = await fetch("https://your-backend.com/api/interviews", {
+      const res = await fetch("http://localhost:3000/api/share-experience", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`, 
+        },
         body: JSON.stringify({
           ...form,
           tags: form.tags
             .split(",")
             .map((t) => t.trim())
             .filter(Boolean),
-          codingLinks: codingLinks.filter(l => l.url.trim() !== ""),
+          codingLinks: codingLinks.filter((l) => l.url.trim() !== ""),
+          userId: user?._id || user?.id,
         }),
       });
 
       if (!res.ok) throw new Error("Failed to submit");
 
       setSubmitting(false);
-      alert("Submitted successfully!");
-      // Reset form
+
+      // ✅ Redirect to company page
+      navigate(`/company/${form.company}`);
+
+      // ✅ Reset form
       setForm({
         company: "",
         role: "",
@@ -135,37 +149,38 @@ export default function ShareExperiencePage() {
         tips: "",
         rounds: [initialRound],
       });
+
       setCodingLinks([{ platform: "", url: "" }]);
       setResumeFile(null);
       setResumeName("");
+
     } catch (err) {
       setSubmitting(false);
       setError(err.message);
     }
   };
 
+  // ✅ UI IS 100% UNCHANGED BELOW
   return (
     <div className="min-h-screen bg-slate-50 py-12 px-4 sm:px-6">
       <div className="max-w-4xl mx-auto">
-        {/* Back button */}
+
         <button
-          onClick={() => alert('Navigate to home')}
+          onClick={() => navigate("/")}
           className="group flex items-center text-slate-500 mb-8 hover:text-purple-600 transition"
         >
-          <span className="mr-2 text-xl group-hover:-translate-x-1 transition">
-            ←
-          </span>
+          <span className="mr-2 text-xl group-hover:-translate-x-1 transition">←</span>
           Back to Home
         </button>
 
-        {/* Card */}
+
+
+{/* Card */}
         <div className="bg-white p-6 md:p-10 rounded-2xl shadow-xl shadow-slate-200/60 border border-slate-100">
 
           {/* Header */}
-         <div className="mb-8">
-  <div className="flex items-center justify-between gap-6 rounded-2xl bg-gradient-to-br from-purple-50/80 via-indigo-50/60 to-blue-50/50 px-8 py-8 relative overflow-hidden">
-
-              
+          <div className="mb-8">
+            <div className="flex items-center justify-between gap-6 rounded-2xl bg-gradient-to-br from-purple-50/80 via-indigo-50/60 to-blue-50/50 px-8 py-8 relative overflow-hidden">
               <div className="relative z-10 flex-1 max-w-3xl">
                 <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/90 text-[11px] font-bold uppercase tracking-wider text-purple-600 mb-4">
                   <span className="w-2 h-2 rounded-full bg-purple-600" />
@@ -182,18 +197,16 @@ export default function ShareExperiencePage() {
                 </p>
               </div>
 
-              {/* Logo - Aligned to top right */}
-             {/* Logo - Centered vertically on the right */}
-<div className="relative z-10 flex items-center justify-center shrink-0 self-center">
-  <div className="w-28 h-28 md:w-36 md:h-36 flex items-center justify-center">
-    <img
-      src={exLogo}
-      alt="Experience X Logo"
-      className="w-full h-full object-contain drop-shadow-lg"
-    />
-  </div>
-</div>
-
+              {/* Logo - Centered vertically on the right */}
+              <div className="relative z-10 flex items-center justify-center shrink-0 self-center">
+                <div className="w-28 h-28 md:w-36 md:h-36 flex items-center justify-center">
+                  <img
+                    src={exLogo}
+                    alt="Experience X Logo"
+                    className="w-full h-full object-contain drop-shadow-lg"
+                  />
+                </div>
+              </div>
             </div>
           </div>
 
@@ -612,3 +625,5 @@ export default function ShareExperiencePage() {
     </div>
   );
 }
+
+      

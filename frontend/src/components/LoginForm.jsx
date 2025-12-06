@@ -189,7 +189,17 @@ export default function AuthForm() {
             </div>
 
           
-        
+            <div className={`overflow-hidden transition-all duration-300 ease-in-out ${isLogin ? 'max-h-10 opacity-100' : 'max-h-0 opacity-0'}`}>
+              <div className="flex items-center justify-between text-sm mt-2">
+                <label className="flex items-center gap-2 cursor-pointer group">
+                  <input type="checkbox" className="h-4 w-4 rounded border-gray-300 text-purple-600 focus:ring-purple-500" />
+                  <span className="text-slate-600">Remember me</span>
+                </label>
+                <a href="/forgot" className="font-semibold text-purple-600 hover:underline">
+                  Forgot password?
+                </a>
+              </div>
+            </div>
 
             <button
               type="submit"

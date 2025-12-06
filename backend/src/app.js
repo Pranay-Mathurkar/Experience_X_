@@ -2,10 +2,10 @@ import express from 'express';
 import cors from 'cors';
 
 import mongoose from "mongoose";
-import router from "./routes/user.js";
+//import router from "./routes/user.js";
 import dotenv from "dotenv";
 
-import "./controllers/user.controller.js";
+//import "./controllers/user.controller.js";
 
 dotenv.config();
 
@@ -24,7 +24,7 @@ app.get('/home', (req, res) => {
     res.send('Hello World!');
 });
 
-app.use("/", router);
+//app.use("/", router);
 
 const start = async () => {
   try {

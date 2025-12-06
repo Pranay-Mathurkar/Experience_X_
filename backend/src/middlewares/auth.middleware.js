@@ -24,7 +24,7 @@ export const authMiddleware = async (req, res, next) => {
         .json({ message: "User not found" });
     }
 
-    req.user = user; //  REQUIRED FOR YOUR CONTROLLER
+    req.user = user; 
     next();
   } catch (error) {
     return res

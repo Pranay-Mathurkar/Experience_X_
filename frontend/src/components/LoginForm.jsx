@@ -1,7 +1,12 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { useAuth } from "../contexts/AuthContext";
 
 export default function AuthForm() {
+
+  const { handleLogin, handleSignup } = useAuth();
+
+  
   const [isLogin, setIsLogin] = useState(true); 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -21,10 +26,10 @@ export default function AuthForm() {
     if (password.length < 6) return "Password must be at least 6 characters";
     return null;
   }
-
-  async function handleSubmit(e) {
+async function handleSubmit(e) {
     e.preventDefault();
     setError(null);
+
     const v = validate();
     if (v) {
       setError(v);
@@ -32,22 +37,17 @@ export default function AuthForm() {
     }
 
     setLoading(true);
-   
-    const endpoint = isLogin ? "/api/login" : "/api/signup";
-    const payload = isLogin ? { email, password } : { name, email, password };
 
     try {
-      
-      console.log(`Submitting to ${endpoint}`, payload);
-      
-     
-      await new Promise(resolve => setTimeout(resolve, 1500)); 
-
-      
-      window.location.href = "/dashboard";
-      
+      if (isLogin) {
+        // ✅ LOGIN
+        await handleLogin(email, password);
+      } else {
+        // ✅ SIGNUP
+        await handleSignup(name, email, password);
+      }
     } catch (err) {
-      setError(err.message || "Something went wrong");
+      setError(err.response?.data?.message || err.message || "Something went wrong");
     } finally {
       setLoading(false);
     }
@@ -188,18 +188,6 @@ export default function AuthForm() {
               </div>
             </div>
 
-          
-            <div className={`overflow-hidden transition-all duration-300 ease-in-out ${isLogin ? 'max-h-10 opacity-100' : 'max-h-0 opacity-0'}`}>
-              <div className="flex items-center justify-between text-sm mt-2">
-                <label className="flex items-center gap-2 cursor-pointer group">
-                  <input type="checkbox" className="h-4 w-4 rounded border-gray-300 text-purple-600 focus:ring-purple-500" />
-                  <span className="text-slate-600">Remember me</span>
-                </label>
-                <a href="/forgot" className="font-semibold text-purple-600 hover:underline">
-                  Forgot password?
-                </a>
-              </div>
-            </div>
 
             <button
               type="submit"

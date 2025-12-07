@@ -1,8 +1,12 @@
 import { useState } from "react";
-import { useAuth } from "../contexts/AuthContext"; // Adjust the import path as needed
+import { useAuth } from "../contexts/AuthContext"; 
 
 export default function SignupForm() {
-  const { handleSignup } = useAuth();
+
+const auth = useAuth();
+console.log("AUTH OBJECT:", auth);
+const { handleSignup } = auth;
+
   
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);

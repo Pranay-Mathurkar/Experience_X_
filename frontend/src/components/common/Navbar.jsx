@@ -162,7 +162,7 @@ export function Navbar() {
   }, []);
 
  const navLinks = [
-  { name: 'Home', href: '/home' },
+  { name: 'My Account', href: '/account' },
   { name: 'About', href: '/about' },
   { name: 'Share Experience', href: '/share-experience' },
 ];

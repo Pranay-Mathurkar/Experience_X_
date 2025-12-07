@@ -5,10 +5,13 @@ import {
   signup,
   createInterviewExperience,
   getAllInterviewExperiences,
-  getSingleInterviewExperience,
+  getSingleInterviewExperience, 
   updateInterviewExperience,
   getMyInterviewExperiences,
   getCompanyExperiences,
+  deleteInterviewExperience,     
+  toggleBookmark,               
+  toggleFollowCompany,  
 } from "../controllers/user.controller.js";
 
 import { authMiddleware } from "../middlewares/auth.middleware.js";
@@ -35,6 +38,29 @@ router.get("/share-experience/:id", getSingleInterviewExperience);
 router.put("/share-experience/:id", authMiddleware, updateInterviewExperience);
 router.get("/my-experiences",authMiddleware,getMyInterviewExperiences);
 router.get("/company/:companyName", getCompanyExperiences);
+
+router.delete(
+  "/share-experience/:id",
+  authMiddleware,
+  deleteInterviewExperience
+);
+
+
+router.post(
+  "/bookmark",
+  authMiddleware,
+  toggleBookmark
+);
+
+
+router.post(
+  "/follow-company",
+  authMiddleware,
+  toggleFollowCompany
+);
+
+
+
 
 
 

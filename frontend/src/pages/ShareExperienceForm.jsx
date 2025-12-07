@@ -104,7 +104,7 @@ const token = localStorage.getItem("token");
       return;
     }
 
-   if (!user || !token) {
+  if (!user || !token) {
   setError("You must be logged in to submit.");
   navigate("/login");
   return;

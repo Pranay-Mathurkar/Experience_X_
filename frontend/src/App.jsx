@@ -6,6 +6,9 @@ import AboutPage from "./pages/AboutPage";
 import SignupPage from "./pages/SignupPage";
 import { AuthProvider } from "./contexts/AuthContext";
 import Company from "./pages/company";
+import ExperienceDetail from "./pages/detail";
+import MyAccount from "./pages/myaccount";
+
 
 export default function App() {
   return (
@@ -18,6 +21,8 @@ export default function App() {
           <Route path="/signup" element={<SignupPage />} />
           <Route path="/about" element={<AboutPage />} />
           <Route path="/company/:companyName" element={<Company />} />
+          <Route path="/experience/:id" element={<ExperienceDetail />} />
+            <Route path="/account" element={<MyAccount />} />
         </Routes>
       </AuthProvider>
     </BrowserRouter>

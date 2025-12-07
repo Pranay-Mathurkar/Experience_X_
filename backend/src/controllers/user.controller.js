@@ -316,6 +316,99 @@ const getCompanyExperiences = async (req, res) => {
   }
 };
 
+
+
+// ✅ DELETE MY EXPERIENCE
+const deleteInterviewExperience = async (req, res) => {
+  try {
+    const experience = await InterviewExperience.findById(req.params.id);
+
+    if (!experience) {
+      return res.status(httpStatus.NOT_FOUND).json({
+        message: "Experience not found",
+      });
+    }
+
+    if (experience.user.toString() !== req.user._id.toString()) {
+      return res.status(httpStatus.FORBIDDEN).json({
+        message: "You are not allowed to delete this experience",
+      });
+    }
+
+    await experience.deleteOne();
+
+    return res.status(httpStatus.OK).json({
+      message: "Experience deleted successfully",
+    });
+  } catch (error) {
+    return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
+      message: "Delete failed",
+      error: error.message,
+    });
+  }
+};
+
+// ✅ BOOKMARK / UNBOOKMARK EXPERIENCE
+const toggleBookmark = async (req, res) => {
+  try {
+    const { experienceId } = req.body;
+
+    const user = await User.findById(req.user._id);
+
+    if (!user.bookmarks) user.bookmarks = [];
+
+    if (user.bookmarks.includes(experienceId)) {
+      user.bookmarks.pull(experienceId); // Unbookmark
+    } else {
+      user.bookmarks.push(experienceId); // Bookmark
+    }
+
+    await user.save();
+
+    return res.status(httpStatus.OK).json({
+      message: "Bookmark updated",
+      bookmarks: user.bookmarks,
+    });
+  } catch (error) {
+    return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
+      message: "Bookmark failed",
+      error: error.message,
+    });
+  }
+};
+
+// ✅ FOLLOW / UNFOLLOW COMPANY
+const toggleFollowCompany = async (req, res) => {
+  try {
+    const { companyName } = req.body;
+
+    const user = await User.findById(req.user._id);
+
+    if (!user.followedCompanies) user.followedCompanies = [];
+
+    if (user.followedCompanies.includes(companyName)) {
+      user.followedCompanies.pull(companyName); // Unfollow
+    } else {
+      user.followedCompanies.push(companyName); // Follow
+    }
+
+    await user.save();
+
+    return res.status(httpStatus.OK).json({
+      message: "Follow list updated",
+      followedCompanies: user.followedCompanies,
+    });
+  } catch (error) {
+    return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
+      message: "Follow failed",
+      error: error.message,
+    });
+  }
+};
+
+
+
+
 export { 
 signup,
 login, 
@@ -325,6 +418,9 @@ getSingleInterviewExperience,
 updateInterviewExperience,
 getMyInterviewExperiences,
 getCompanyExperiences,
+ deleteInterviewExperience,
+  toggleBookmark,
+  toggleFollowCompany,
 
 };
 

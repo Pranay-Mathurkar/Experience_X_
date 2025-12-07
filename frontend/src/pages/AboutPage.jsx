@@ -51,7 +51,7 @@ export default function AboutPage() {
           </div>
         </section>
 
-        {/* How it works */}
+   
         <section className="max-w-5xl mx-auto px-4 pb-14">
           <h2 className="text-xl md:text-2xl font-semibold text-gray-900 mb-4">
             How Interview Archive works
@@ -130,7 +130,7 @@ export default function AboutPage() {
               </p>
             </div>
             <button
-              onClick={() => (window.location.href = "/")} // or open your ShareExperienceForm
+              onClick={() => (window.location.href = "/")} 
               className="inline-flex items-center justify-center px-5 py-2.5 rounded-full bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium shadow-md"
             >
               Share your experience

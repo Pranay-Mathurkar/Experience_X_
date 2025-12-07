@@ -45,6 +45,14 @@ const FormSchema = new Schema(
       default: "Medium",
     },
 
+    // New rating field (1–5 as string or number)
+    rating: {
+      type: Number,
+      min: 1,
+      max: 5,
+      required: true,
+    },
+
     // Tags from comma-separated input
     tags: [{ type: String, required: true }],
 
@@ -70,9 +78,6 @@ const FormSchema = new Schema(
   { timestamps: true }
 );
 
-const InterviewExperience = mongoose.model(
-  "InterviewExperience",
-  FormSchema
-);
+const InterviewExperience = mongoose.model("InterviewExperience", FormSchema);
 
 export { InterviewExperience };

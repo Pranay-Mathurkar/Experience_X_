@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import exLogo from "../assets/experience-x-logo.png";
-import { useAuth } from "../contexts/AuthContext"; 
+import { useAuth } from "../contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 
 const initialRound = { roundType: "", mode: "", difficulty: "", questions: "" };
@@ -26,6 +26,7 @@ export default function ShareExperiencePage() {
     mainExperience: "",
     tips: "",
     rounds: [initialRound],
+    rating: "", // 👈 added
   });
 
   const [submitting, setSubmitting] = useState(false);
@@ -46,6 +47,7 @@ export default function ShareExperiencePage() {
     form.stocks.trim() !== "" &&
     form.mainExperience.trim() !== "" &&
     form.tips.trim() !== "" &&
+    form.rating.trim() !== "" && // 👈 rating required
     form.rounds.every(
       (r) =>
         r.roundType.trim() !== "" &&
@@ -133,6 +135,7 @@ export default function ShareExperiencePage() {
         mainExperience: "",
         tips: "",
         rounds: [initialRound],
+        rating: "", // 👈 reset
       });
     } catch (err) {
       setSubmitting(false);
@@ -143,7 +146,6 @@ export default function ShareExperiencePage() {
   return (
     <div className="min-h-screen bg-slate-50 py-12 px-4 sm:px-6">
       <div className="max-w-4xl mx-auto">
-
         <button
           onClick={() => navigate("/home")}
           className="group flex items-center text-slate-500 mb-8 hover:text-purple-600 transition"
@@ -154,7 +156,6 @@ export default function ShareExperiencePage() {
 
         {/* Card */}
         <div className="bg-white p-6 md:p-10 rounded-2xl shadow-xl shadow-slate-200/60 border border-slate-100">
-
           {/* Header */}
           <div className="mb-8">
             <div className="flex items-center justify-between gap-6 rounded-2xl bg-gradient-to-br from-purple-50/80 via-indigo-50/60 to-blue-50/50 px-8 py-8 relative overflow-hidden">
@@ -195,19 +196,16 @@ export default function ShareExperiencePage() {
           )}
 
           <div className="space-y-8">
-
             {/* ---------------- BASIC DETAILS ---------------- */}
             <section className="space-y-4">
-              <h2 className="text-xl font-semibold text-slate-900">
-                Basic Details *
-              </h2>
-              <p className="text-xs text-slate-500">
-                All fields are required.
-              </p>
+              <h2 className="text-xl font-semibold text-slate-900">Basic Details *</h2>
+              <p className="text-xs text-slate-500">All fields are required.</p>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label className="block text-sm font-semibold text-slate-700 mb-2">Company *</label>
+                  <label className="block text-sm font-semibold text-slate-700 mb-2">
+                    Company *
+                  </label>
                   <input
                     name="company"
                     value={form.company}
@@ -219,7 +217,9 @@ export default function ShareExperiencePage() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-slate-700 mb-2">Role / Position *</label>
+                  <label className="block text-sm font-semibold text-slate-700 mb-2">
+                    Role / Position *
+                  </label>
                   <input
                     name="role"
                     value={form.role}
@@ -231,7 +231,9 @@ export default function ShareExperiencePage() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-slate-700 mb-2">Location *</label>
+                  <label className="block text-sm font-semibold text-slate-700 mb-2">
+                    Location *
+                  </label>
                   <input
                     name="location"
                     value={form.location}
@@ -243,7 +245,9 @@ export default function ShareExperiencePage() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-slate-700 mb-2">Season / Year *</label>
+                  <label className="block text-sm font-semibold text-slate-700 mb-2">
+                    Season / Year *
+                  </label>
                   <input
                     name="season"
                     value={form.season}
@@ -255,11 +259,13 @@ export default function ShareExperiencePage() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-slate-700 mb-2">Interview Type *</label>
-                  <select 
-                    name="interviewType" 
-                    value={form.interviewType} 
-                    onChange={handleChange} 
+                  <label className="block text-sm font-semibold text-slate-700 mb-2">
+                    Interview Type *
+                  </label>
+                  <select
+                    name="interviewType"
+                    value={form.interviewType}
+                    onChange={handleChange}
                     required
                     className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 focus:outline-none focus:bg-white focus:border-purple-500 focus:ring-2 focus:ring-purple-100 transition-all appearance-none cursor-pointer"
                   >
@@ -271,11 +277,13 @@ export default function ShareExperiencePage() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-slate-700 mb-2">Offer Status *</label>
-                  <select 
-                    name="offerStatus" 
-                    value={form.offerStatus} 
-                    onChange={handleChange} 
+                  <label className="block text-sm font-semibold text-slate-700 mb-2">
+                    Offer Status *
+                  </label>
+                  <select
+                    name="offerStatus"
+                    value={form.offerStatus}
+                    onChange={handleChange}
                     required
                     className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 focus:outline-none focus:bg-white focus:border-purple-500 focus:ring-2 focus:ring-purple-100 transition-all appearance-none cursor-pointer"
                   >
@@ -288,11 +296,13 @@ export default function ShareExperiencePage() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-slate-700 mb-2">Overall Difficulty *</label>
-                  <select 
-                    name="overallDifficulty" 
-                    value={form.overallDifficulty} 
-                    onChange={handleChange} 
+                  <label className="block text-sm font-semibold text-slate-700 mb-2">
+                    Overall Difficulty *
+                  </label>
+                  <select
+                    name="overallDifficulty"
+                    value={form.overallDifficulty}
+                    onChange={handleChange}
                     required
                     className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 focus:outline-none focus:bg-white focus:border-purple-500 focus:ring-2 focus:ring-purple-100 transition-all appearance-none cursor-pointer"
                   >
@@ -303,8 +313,31 @@ export default function ShareExperiencePage() {
                   </select>
                 </div>
 
+                {/* Rating */}
+                <div>
+                  <label className="block text-sm font-semibold text-slate-700 mb-2">
+                    Overall Rating (1–5) *
+                  </label>
+                  <select
+                    name="rating"
+                    value={form.rating}
+                    onChange={handleChange}
+                    required
+                    className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 focus:outline-none focus:bg-white focus:border-purple-500 focus:ring-2 focus:ring-purple-100 transition-all appearance-none cursor-pointer"
+                  >
+                    <option value="">Select rating</option>
+                    <option value="1">1 - Very poor</option>
+                    <option value="2">2 - Below average</option>
+                    <option value="3">3 - Average</option>
+                    <option value="4">4 - Good</option>
+                    <option value="5">5 - Excellent</option>
+                  </select>
+                </div>
+
                 <div className="md:col-span-2">
-                  <label className="block text-sm font-semibold text-slate-700 mb-2">Tags (comma-separated) *</label>
+                  <label className="block text-sm font-semibold text-slate-700 mb-2">
+                    Tags (comma-separated) *
+                  </label>
                   <input
                     name="tags"
                     value={form.tags}
@@ -335,13 +368,16 @@ export default function ShareExperiencePage() {
 
               <div className="space-y-4">
                 {form.rounds.map((round, index) => (
-                  <div key={index} className="border border-slate-200 bg-slate-50/50 p-5 rounded-xl shadow-sm">
+                  <div
+                    key={index}
+                    className="border border-slate-200 bg-slate-50/50 p-5 rounded-xl shadow-sm"
+                  >
                     <div className="flex justify-between items-center mb-4">
                       <h3 className="font-semibold text-slate-900">Round {index + 1}</h3>
                       {form.rounds.length > 1 && (
-                        <button 
-                          type="button" 
-                          onClick={() => removeRound(index)} 
+                        <button
+                          type="button"
+                          onClick={() => removeRound(index)}
                           className="text-xs text-red-500 hover:text-red-600 font-medium px-3 py-1.5 rounded-lg border border-red-200 bg-red-50 hover:bg-red-100 transition-all"
                         >
                           Remove Round
@@ -351,7 +387,9 @@ export default function ShareExperiencePage() {
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
                       <div>
-                        <label className="block text-xs font-medium text-slate-600 mb-1.5">Round Type *</label>
+                        <label className="block text-xs font-medium text-slate-600 mb-1.5">
+                          Round Type *
+                        </label>
                         <input
                           name="roundType"
                           value={round.roundType}
@@ -363,7 +401,9 @@ export default function ShareExperiencePage() {
                       </div>
 
                       <div>
-                        <label className="block text-xs font-medium text-slate-600 mb-1.5">Mode *</label>
+                        <label className="block text-xs font-medium text-slate-600 mb-1.5">
+                          Mode *
+                        </label>
                         <input
                           name="mode"
                           value={round.mode}
@@ -375,7 +415,9 @@ export default function ShareExperiencePage() {
                       </div>
 
                       <div>
-                        <label className="block text-xs font-medium text-slate-600 mb-1.5">Difficulty *</label>
+                        <label className="block text-xs font-medium text-slate-600 mb-1.5">
+                          Difficulty *
+                        </label>
                         <select
                           name="difficulty"
                           value={round.difficulty}
@@ -392,7 +434,9 @@ export default function ShareExperiencePage() {
                     </div>
 
                     <div>
-                      <label className="block text-xs font-medium text-slate-600 mb-1.5">Questions / Topics Covered *</label>
+                      <label className="block text-xs font-medium text-slate-600 mb-1.5">
+                        Questions / Topics Covered *
+                      </label>
                       <textarea
                         name="questions"
                         value={round.questions}
@@ -417,7 +461,9 @@ export default function ShareExperiencePage() {
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div>
-                  <label className="block text-sm font-semibold text-slate-700 mb-2">Stipend (Monthly) *</label>
+                  <label className="block text-sm font-semibold text-slate-700 mb-2">
+                    Stipend (Monthly) *
+                  </label>
                   <input
                     name="stipend"
                     value={form.stipend}
@@ -429,7 +475,9 @@ export default function ShareExperiencePage() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-slate-700 mb-2">Base Salary (Annual) *</label>
+                  <label className="block text-sm font-semibold text-slate-700 mb-2">
+                    Base Salary (Annual) *
+                  </label>
                   <input
                     name="baseSalary"
                     value={form.baseSalary}
@@ -441,7 +489,9 @@ export default function ShareExperiencePage() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-slate-700 mb-2">Stocks / Bonus *</label>
+                  <label className="block text-sm font-semibold text-slate-700 mb-2">
+                    Stocks / Bonus *
+                  </label>
                   <input
                     name="stocks"
                     value={form.stocks}
@@ -462,7 +512,9 @@ export default function ShareExperiencePage() {
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-slate-700 mb-2">Main Experience / Story *</label>
+                <label className="block text-sm font-semibold text-slate-700 mb-2">
+                  Main Experience / Story *
+                </label>
                 <textarea
                   name="mainExperience"
                   value={form.mainExperience}
@@ -475,7 +527,9 @@ export default function ShareExperiencePage() {
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-slate-700 mb-2">Tips for Future Candidates *</label>
+                <label className="block text-sm font-semibold text-slate-700 mb-2">
+                  Tips for Future Candidates *
+                </label>
                 <textarea
                   name="tips"
                   value={form.tips}
@@ -503,11 +557,11 @@ export default function ShareExperiencePage() {
                 {submitting ? "Submitting Your Experience..." : "Submit Experience"}
               </button>
               <p className="text-xs text-slate-500 text-center mt-3">
-                By submitting, you agree that your post may be shown publicly in an anonymous form to help other candidates.
+                By submitting, you agree that your post may be shown publicly in an anonymous form
+                to help other candidates.
               </p>
             </div>
           </div>
-
         </div>
       </div>
     </div>

@@ -133,6 +133,7 @@ const login = async (req, res) => {
       mainExperience,
       tips,
       rounds,
+      rating
      
     } = req.body;
 
@@ -158,6 +159,7 @@ const login = async (req, res) => {
       mainExperience,
       tips,
       rounds,
+      rating
      
     });
 

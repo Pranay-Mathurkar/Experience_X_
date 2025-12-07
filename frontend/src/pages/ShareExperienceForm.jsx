@@ -31,11 +31,28 @@ export default function ShareExperiencePage() {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
 
-  // required fields for this form
+  // all fields required for this form
   const isFormValid =
     form.company.trim() !== "" &&
     form.role.trim() !== "" &&
-    form.mainExperience.trim() !== "";
+    form.location.trim() !== "" &&
+    form.season.trim() !== "" &&
+    form.interviewType.trim() !== "" &&
+    form.offerStatus.trim() !== "" &&
+    form.overallDifficulty.trim() !== "" &&
+    form.tags.trim() !== "" &&
+    form.stipend.trim() !== "" &&
+    form.baseSalary.trim() !== "" &&
+    form.stocks.trim() !== "" &&
+    form.mainExperience.trim() !== "" &&
+    form.tips.trim() !== "" &&
+    form.rounds.every(
+      (r) =>
+        r.roundType.trim() !== "" &&
+        r.mode.trim() !== "" &&
+        r.difficulty.trim() !== "" &&
+        r.questions.trim() !== ""
+    );
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -66,8 +83,8 @@ export default function ShareExperiencePage() {
     setError("");
 
     // backend-safe guard
-    if (!form.company || !form.role || !form.mainExperience) {
-      setError("Company, Role and Main Experience are required.");
+    if (!isFormValid) {
+      setError("Please fill all required fields.");
       return;
     }
 
@@ -182,10 +199,10 @@ export default function ShareExperiencePage() {
             {/* ---------------- BASIC DETAILS ---------------- */}
             <section className="space-y-4">
               <h2 className="text-xl font-semibold text-slate-900">
-                Basic Details
+                Basic Details *
               </h2>
               <p className="text-xs text-slate-500">
-                Fields marked with * are required.
+                All fields are required.
               </p>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -214,35 +231,39 @@ export default function ShareExperiencePage() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-slate-700 mb-2">Location</label>
+                  <label className="block text-sm font-semibold text-slate-700 mb-2">Location *</label>
                   <input
                     name="location"
                     value={form.location}
                     onChange={handleChange}
+                    required
                     className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 focus:outline-none focus:bg-white focus:border-purple-500 focus:ring-2 focus:ring-purple-100 transition-all"
                     placeholder="Bangalore / Remote / Hybrid"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-slate-700 mb-2">Season / Year</label>
+                  <label className="block text-sm font-semibold text-slate-700 mb-2">Season / Year *</label>
                   <input
                     name="season"
                     value={form.season}
                     onChange={handleChange}
+                    required
                     className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 focus:outline-none focus:bg-white focus:border-purple-500 focus:ring-2 focus:ring-purple-100 transition-all"
                     placeholder="Summer 2025, Fall 2024"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-slate-700 mb-2">Interview Type</label>
+                  <label className="block text-sm font-semibold text-slate-700 mb-2">Interview Type *</label>
                   <select 
                     name="interviewType" 
                     value={form.interviewType} 
                     onChange={handleChange} 
+                    required
                     className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 focus:outline-none focus:bg-white focus:border-purple-500 focus:ring-2 focus:ring-purple-100 transition-all appearance-none cursor-pointer"
                   >
+                    <option value="">Select</option>
                     <option>Internship</option>
                     <option>Full-time</option>
                     <option>PPO</option>
@@ -250,13 +271,15 @@ export default function ShareExperiencePage() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-slate-700 mb-2">Offer Status</label>
+                  <label className="block text-sm font-semibold text-slate-700 mb-2">Offer Status *</label>
                   <select 
                     name="offerStatus" 
                     value={form.offerStatus} 
                     onChange={handleChange} 
+                    required
                     className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 focus:outline-none focus:bg-white focus:border-purple-500 focus:ring-2 focus:ring-purple-100 transition-all appearance-none cursor-pointer"
                   >
+                    <option value="">Select</option>
                     <option>Offered</option>
                     <option>Rejected</option>
                     <option>On Hold</option>
@@ -265,13 +288,15 @@ export default function ShareExperiencePage() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-slate-700 mb-2">Overall Difficulty</label>
+                  <label className="block text-sm font-semibold text-slate-700 mb-2">Overall Difficulty *</label>
                   <select 
                     name="overallDifficulty" 
                     value={form.overallDifficulty} 
                     onChange={handleChange} 
+                    required
                     className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 focus:outline-none focus:bg-white focus:border-purple-500 focus:ring-2 focus:ring-purple-100 transition-all appearance-none cursor-pointer"
                   >
+                    <option value="">Select</option>
                     <option>Easy</option>
                     <option>Medium</option>
                     <option>Hard</option>
@@ -279,11 +304,12 @@ export default function ShareExperiencePage() {
                 </div>
 
                 <div className="md:col-span-2">
-                  <label className="block text-sm font-semibold text-slate-700 mb-2">Tags (comma-separated)</label>
+                  <label className="block text-sm font-semibold text-slate-700 mb-2">Tags (comma-separated) *</label>
                   <input
                     name="tags"
                     value={form.tags}
                     onChange={handleChange}
+                    required
                     placeholder="DSA, System Design, React, Node.js, Behavioral"
                     className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 focus:outline-none focus:bg-white focus:border-purple-500 focus:ring-2 focus:ring-purple-100 transition-all"
                   />
@@ -295,8 +321,8 @@ export default function ShareExperiencePage() {
             <section className="space-y-4">
               <div className="flex justify-between items-center">
                 <div>
-                  <h2 className="text-xl font-semibold text-slate-900">Interview Rounds</h2>
-                  <p className="text-xs text-slate-500 mt-1">Add details about each round you faced</p>
+                  <h2 className="text-xl font-semibold text-slate-900">Interview Rounds *</h2>
+                  <p className="text-xs text-slate-500 mt-1">All round fields are required.</p>
                 </div>
                 <button
                   type="button"
@@ -325,33 +351,36 @@ export default function ShareExperiencePage() {
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
                       <div>
-                        <label className="block text-xs font-medium text-slate-600 mb-1.5">Round Type</label>
+                        <label className="block text-xs font-medium text-slate-600 mb-1.5">Round Type *</label>
                         <input
                           name="roundType"
                           value={round.roundType}
                           onChange={(e) => handleRoundChange(index, e)}
+                          required
                           className="w-full p-2.5 border border-slate-200 bg-white rounded-lg text-sm text-slate-900 focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-100 transition-all"
                           placeholder="OA, Tech 1, HR"
                         />
                       </div>
 
                       <div>
-                        <label className="block text-xs font-medium text-slate-600 mb-1.5">Mode</label>
+                        <label className="block text-xs font-medium text-slate-600 mb-1.5">Mode *</label>
                         <input
                           name="mode"
                           value={round.mode}
                           onChange={(e) => handleRoundChange(index, e)}
+                          required
                           className="w-full p-2.5 border border-slate-200 bg-white rounded-lg text-sm text-slate-900 focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-100 transition-all"
                           placeholder="Online / Onsite"
                         />
                       </div>
 
                       <div>
-                        <label className="block text-xs font-medium text-slate-600 mb-1.5">Difficulty</label>
+                        <label className="block text-xs font-medium text-slate-600 mb-1.5">Difficulty *</label>
                         <select
                           name="difficulty"
                           value={round.difficulty}
                           onChange={(e) => handleRoundChange(index, e)}
+                          required
                           className="w-full p-2.5 border border-slate-200 bg-white rounded-lg text-sm text-slate-900 focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-100 transition-all appearance-none"
                         >
                           <option value="">Select</option>
@@ -363,11 +392,12 @@ export default function ShareExperiencePage() {
                     </div>
 
                     <div>
-                      <label className="block text-xs font-medium text-slate-600 mb-1.5">Questions / Topics Covered</label>
+                      <label className="block text-xs font-medium text-slate-600 mb-1.5">Questions / Topics Covered *</label>
                       <textarea
                         name="questions"
                         value={round.questions}
                         onChange={(e) => handleRoundChange(index, e)}
+                        required
                         className="w-full p-3 border border-slate-200 bg-white rounded-lg text-sm text-slate-900 focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-100 transition-all resize-y"
                         rows={3}
                         placeholder="Describe the questions asked, topics covered, coding problems, behavioral questions, etc."
@@ -381,39 +411,42 @@ export default function ShareExperiencePage() {
             {/* ---------------- COMPENSATION ---------------- */}
             <section className="space-y-4">
               <div>
-                <h2 className="text-xl font-semibold text-slate-900">Compensation</h2>
-                <p className="text-xs text-slate-500 mt-1">Optional: Share salary details anonymously</p>
+                <h2 className="text-xl font-semibold text-slate-900">Compensation *</h2>
+                <p className="text-xs text-slate-500 mt-1">All compensation fields are required.</p>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div>
-                  <label className="block text-sm font-semibold text-slate-700 mb-2">Stipend (Monthly)</label>
+                  <label className="block text-sm font-semibold text-slate-700 mb-2">Stipend (Monthly) *</label>
                   <input
                     name="stipend"
                     value={form.stipend}
                     onChange={handleChange}
+                    required
                     className="w-full p-3 border border-slate-200 bg-slate-50 rounded-xl text-slate-900 focus:outline-none focus:bg-white focus:border-purple-500 focus:ring-2 focus:ring-purple-100 transition-all"
                     placeholder="₹80,000/month"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-slate-700 mb-2">Base Salary (Annual)</label>
+                  <label className="block text-sm font-semibold text-slate-700 mb-2">Base Salary (Annual) *</label>
                   <input
                     name="baseSalary"
                     value={form.baseSalary}
                     onChange={handleChange}
+                    required
                     className="w-full p-3 border border-slate-200 bg-slate-50 rounded-xl text-slate-900 focus:outline-none focus:bg-white focus:border-purple-500 focus:ring-2 focus:ring-purple-100 transition-all"
                     placeholder="₹25 LPA"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-slate-700 mb-2">Stocks / Bonus</label>
+                  <label className="block text-sm font-semibold text-slate-700 mb-2">Stocks / Bonus *</label>
                   <input
                     name="stocks"
                     value={form.stocks}
                     onChange={handleChange}
+                    required
                     className="w-full p-3 border border-slate-200 bg-slate-50 rounded-xl text-slate-900 focus:outline-none focus:bg-white focus:border-purple-500 focus:ring-2 focus:ring-purple-100 transition-all"
                     placeholder="$50k RSUs, joining bonus"
                   />
@@ -425,7 +458,7 @@ export default function ShareExperiencePage() {
             <section className="space-y-4">
               <div>
                 <h2 className="text-xl font-semibold text-slate-900">Detailed Experience *</h2>
-                <p className="text-xs text-slate-500 mt-1">Share your complete interview journey</p>
+                <p className="text-xs text-slate-500 mt-1">Share your complete interview journey.</p>
               </div>
 
               <div>
@@ -442,11 +475,12 @@ export default function ShareExperiencePage() {
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-slate-700 mb-2">Tips for Future Candidates</label>
+                <label className="block text-sm font-semibold text-slate-700 mb-2">Tips for Future Candidates *</label>
                 <textarea
                   name="tips"
                   value={form.tips}
                   onChange={handleChange}
+                  required
                   className="w-full p-4 border border-slate-200 bg-slate-50 rounded-xl text-slate-900 focus:outline-none focus:bg-white focus:border-purple-500 focus:ring-2 focus:ring-purple-100 transition-all resize-y"
                   rows={4}
                   placeholder="Share your preparation strategy, important topics to focus on, mistakes to avoid, resources that helped, etc."

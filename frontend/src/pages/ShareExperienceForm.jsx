@@ -6,10 +6,8 @@ import { useNavigate } from "react-router-dom";
 const initialRound = { roundType: "", mode: "", difficulty: "", questions: "" };
 
 export default function ShareExperiencePage() {
-
   const { user } = useAuth();
-const token = localStorage.getItem("token");
-
+  const token = localStorage.getItem("token");
 
   const navigate = useNavigate();
 
@@ -33,12 +31,11 @@ const token = localStorage.getItem("token");
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
 
-  const [resumeFile, setResumeFile] = useState(null);
-  const [resumeName, setResumeName] = useState("");
-
-  const [codingLinks, setCodingLinks] = useState([{ platform: "", url: "" }]);
-
-  // ---------------- HANDLERS ----------------
+  // required fields for this form
+  const isFormValid =
+    form.company.trim() !== "" &&
+    form.role.trim() !== "" &&
+    form.mainExperience.trim() !== "";
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -65,80 +62,45 @@ const token = localStorage.getItem("token");
     }));
   };
 
-  const handleCodingLinkChange = (index, e) => {
-    const { name, value } = e.target;
-    setCodingLinks((prev) => {
-      const next = [...prev];
-      next[index] = { ...next[index], [name]: value };
-      return next;
-    });
-  };
-
-  const addCodingLink = () => {
-    setCodingLinks((prev) => [...prev, { platform: "", url: "" }]);
-  };
-
-  const removeCodingLink = (index) => {
-    setCodingLinks((prev) => prev.filter((_, i) => i !== index));
-  };
-
-  const handleResumeChange = (e) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    setResumeFile(file);
-    setResumeName(file.name);
-  };
-
-  const removeResume = () => {
-    setResumeFile(null);
-    setResumeName("");
-  };
-
-  // ---------------- SUBMIT ----------------
-
   const handleSubmit = async () => {
     setError("");
 
+    // backend-safe guard
     if (!form.company || !form.role || !form.mainExperience) {
       setError("Company, Role and Main Experience are required.");
       return;
     }
 
-  if (!user || !token) {
-  setError("You must be logged in to submit.");
-  navigate("/login");
-  return;
-}
-
+    if (!user || !token) {
+      setError("You must be logged in to submit.");
+      navigate("/login");
+      return;
+    }
 
     try {
       setSubmitting(true);
 
-     const res = await fetch("http://localhost:3000/api/share-experience", {
-  method: "POST",
-  headers: {
-    "Content-Type": "application/json",
-    Authorization: `Bearer ${token}`,
-  },
-  body: JSON.stringify({
-    ...form,
-    tags: form.tags
-      .split(",")
-      .map((t) => t.trim())
-      .filter(Boolean),
-    codingLinks: codingLinks.filter((l) => l.url.trim() !== ""),
-  }),
-});
-
+      const res = await fetch("http://localhost:3000/api/share-experience", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          ...form,
+          tags: form.tags
+            .split(",")
+            .map((t) => t.trim())
+            .filter(Boolean),
+        }),
+      });
 
       if (!res.ok) throw new Error("Failed to submit");
 
       setSubmitting(false);
 
-      // ✅ Redirect to company page
       navigate(`/company/${form.company}`);
 
-      // ✅ Reset form
       setForm({
         company: "",
         role: "",
@@ -155,18 +117,12 @@ const token = localStorage.getItem("token");
         tips: "",
         rounds: [initialRound],
       });
-
-      setCodingLinks([{ platform: "", url: "" }]);
-      setResumeFile(null);
-      setResumeName("");
-
     } catch (err) {
       setSubmitting(false);
       setError(err.message);
     }
   };
 
-  // ✅ UI IS 100% UNCHANGED BELOW
   return (
     <div className="min-h-screen bg-slate-50 py-12 px-4 sm:px-6">
       <div className="max-w-4xl mx-auto">
@@ -179,9 +135,7 @@ const token = localStorage.getItem("token");
           Back to Home
         </button>
 
-
-
-{/* Card */}
+        {/* Card */}
         <div className="bg-white p-6 md:p-10 rounded-2xl shadow-xl shadow-slate-200/60 border border-slate-100">
 
           {/* Header */}
@@ -241,6 +195,7 @@ const token = localStorage.getItem("token");
                     name="company"
                     value={form.company}
                     onChange={handleChange}
+                    required
                     className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 focus:outline-none focus:bg-white focus:border-purple-500 focus:ring-2 focus:ring-purple-100 transition-all"
                     placeholder="Google, Amazon, Microsoft"
                   />
@@ -252,6 +207,7 @@ const token = localStorage.getItem("token");
                     name="role"
                     value={form.role}
                     onChange={handleChange}
+                    required
                     className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 focus:outline-none focus:bg-white focus:border-purple-500 focus:ring-2 focus:ring-purple-100 transition-all"
                     placeholder="SDE Intern, Frontend Engineer"
                   />
@@ -333,115 +289,6 @@ const token = localStorage.getItem("token");
                   />
                 </div>
               </div>
-            </section>
-
-            {/* ---------------- CODING PLATFORM LINKS ---------------- */}
-            <section className="space-y-4">
-              <div className="flex justify-between items-center">
-                <div>
-                  <h2 className="text-xl font-semibold text-slate-900">Coding Platform Links</h2>
-                  <p className="text-xs text-slate-500 mt-1">Optional: Share your profiles (LeetCode, GitHub, etc.)</p>
-                </div>
-                <button
-                  type="button"
-                  onClick={addCodingLink}
-                  className="text-sm px-4 py-2 rounded-xl border border-purple-200 text-purple-600 bg-purple-50 hover:bg-purple-100 transition-all font-medium"
-                >
-                  + Add Link
-                </button>
-              </div>
-
-              <div className="space-y-3">
-                {codingLinks.map((link, index) => (
-                  <div key={index} className="grid grid-cols-1 md:grid-cols-[1fr,2fr,auto] gap-3 items-center bg-slate-50 border border-slate-200 rounded-xl p-3">
-                    <select
-                      name="platform"
-                      value={link.platform}
-                      onChange={(e) => handleCodingLinkChange(index, e)}
-                      className="p-2.5 rounded-lg border border-slate-200 bg-white text-sm text-slate-900 focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-100 transition-all"
-                    >
-                      <option value="">Select Platform</option>
-                      <option value="LeetCode">LeetCode</option>
-                      <option value="Codeforces">Codeforces</option>
-                      <option value="CodeChef">CodeChef</option>
-                      <option value="GitHub">GitHub</option>
-                      <option value="GeeksforGeeks">GeeksforGeeks</option>
-                      <option value="HackerRank">HackerRank</option>
-                      <option value="AtCoder">AtCoder</option>
-                      <option value="TopCoder">TopCoder</option>
-                      <option value="Other">Other</option>
-                    </select>
-
-                    <input
-                      type="url"
-                      name="url"
-                      value={link.url}
-                      onChange={(e) => handleCodingLinkChange(index, e)}
-                      placeholder="https://leetcode.com/username"
-                      className="p-2.5 rounded-lg border border-slate-200 bg-white text-sm text-slate-900 focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-100 transition-all"
-                    />
-
-                    {codingLinks.length > 1 && (
-                      <button
-                        type="button"
-                        onClick={() => removeCodingLink(index)}
-                        className="text-xs text-red-500 hover:text-red-600 font-medium px-3 py-2 rounded-lg border border-red-200 bg-red-50 hover:bg-red-100 transition-all"
-                      >
-                        Remove
-                      </button>
-                    )}
-                  </div>
-                ))}
-              </div>
-            </section>
-
-            {/* ---------------- RESUME UPLOAD ---------------- */}
-            <section className="space-y-4">
-              <div>
-                <h2 className="text-xl font-semibold text-slate-900">Resume (Optional)</h2>
-                <p className="text-xs text-slate-500 mt-1">Upload your resume (PDF, DOC, DOCX - Max 5MB)</p>
-              </div>
-
-              {!resumeFile ? (
-                <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-slate-300 rounded-xl bg-slate-50 hover:bg-slate-100 cursor-pointer transition-all group">
-                  <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                    <svg className="w-10 h-10 mb-2 text-slate-400 group-hover:text-purple-500 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
-                    </svg>
-                    <p className="mb-1 text-sm text-slate-600 font-medium">
-                      <span className="text-purple-600 font-semibold">Click to upload</span> or drag and drop
-                    </p>
-                    <p className="text-xs text-slate-500">PDF, DOC, DOCX (MAX. 5MB)</p>
-                  </div>
-                  <input
-                    type="file"
-                    accept=".pdf,.doc,.docx"
-                    className="hidden"
-                    onChange={handleResumeChange}
-                  />
-                </label>
-              ) : (
-                <div className="flex items-center justify-between p-4 bg-purple-50 border border-purple-200 rounded-xl">
-                  <div className="flex items-center gap-3">
-                    <div className="flex items-center justify-center w-12 h-12 bg-purple-100 rounded-lg">
-                      <svg className="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                      </svg>
-                    </div>
-                    <div>
-                      <p className="text-sm font-semibold text-slate-900">{resumeName}</p>
-                      <p className="text-xs text-slate-500">Resume uploaded successfully</p>
-                    </div>
-                  </div>
-                  <button
-                    type="button"
-                    onClick={removeResume}
-                    className="text-sm text-red-500 hover:text-red-600 font-medium px-3 py-2 rounded-lg border border-red-200 bg-red-50 hover:bg-red-100 transition-all"
-                  >
-                    Remove
-                  </button>
-                </div>
-              )}
             </section>
 
             {/* ---------------- ROUNDS ---------------- */}
@@ -587,6 +434,7 @@ const token = localStorage.getItem("token");
                   name="mainExperience"
                   value={form.mainExperience}
                   onChange={handleChange}
+                  required
                   className="w-full p-4 border border-slate-200 bg-slate-50 rounded-xl text-slate-900 focus:outline-none focus:bg-white focus:border-purple-500 focus:ring-2 focus:ring-purple-100 transition-all resize-y"
                   rows={6}
                   placeholder="Walk us through your interview process, timeline, what went well, challenges faced, and overall experience..."
@@ -610,10 +458,10 @@ const token = localStorage.getItem("token");
             <div className="pt-4 border-t border-slate-200">
               <button
                 onClick={handleSubmit}
-                disabled={submitting}
+                disabled={submitting || !isFormValid}
                 className={`w-full py-3.5 px-6 rounded-xl font-bold text-white shadow-lg shadow-purple-500/30 transition-all duration-200 transform
                   ${
-                    submitting
+                    submitting || !isFormValid
                       ? "bg-purple-300 cursor-not-allowed"
                       : "bg-gradient-to-r from-purple-600 to-indigo-600 hover:shadow-purple-500/50 hover:-translate-y-0.5 active:scale-[0.98]"
                   }`}
@@ -631,5 +479,3 @@ const token = localStorage.getItem("token");
     </div>
   );
 }
-
-      

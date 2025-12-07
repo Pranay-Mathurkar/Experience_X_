@@ -1,8 +1,8 @@
 // src/pages/ShareExperience/ShareExperiencePage.jsx
 import React from "react";
-import { Navbar } from "../../components/common/Navbar";
-import { Footer } from "../../components/common/Footer";
-import ShareExperienceForm from "../../components/interview/ShareExperienceForm";
+import { Navbar } from "../components/common/Navbar";
+import { Footer } from "../components/common/Footer";
+import ShareExperienceForm from "./ShareExperienceForm"
 
 const ShareExperiencePage = () => {
   return (

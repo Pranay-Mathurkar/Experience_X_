@@ -8,104 +8,100 @@ export default function CompanyDetailsPage() {
   const [company, setCompany] = useState(null);
   const [reviews, setReviews] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [stats, setStats] = useState({ total: 0, difficulty: 'Moderate', acceptanceRate: '0%' });
 
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
-      
       await new Promise(resolve => setTimeout(resolve, 800));
 
       setCompany({
-        id: id,
-        name: "Google",
-        logo: "https://logo.clearbit.com/google.com",
+        id: id || "Google",
+        name: id || "Google",
+        logo: `https://logo.clearbit.com/${(id || "google").toLowerCase().replace(/\s+/g, '')}.com`,
         industry: "Technology",
         location: "Mountain View, CA",
         website: "https://google.com",
-        description: "Google is an American multinational technology company focusing on search engine technology, online advertising, cloud computing, computer software, quantum computing, e-commerce, artificial intelligence, and consumer electronics.",
+        description:
+          "Google is an American multinational technology company focusing on search engine technology, online advertising, cloud computing, computer software, quantum computing, e-commerce, artificial intelligence, and consumer electronics.",
         overallRating: 4.5,
         totalReviews: 128,
-        difficulty: "Medium-Hard"
+        difficulty: "Medium-Hard",
       });
 
       const mockReviews = [
-        { 
-          id: 1, 
-          user: "Sarthak K.", 
-          role: "SDE Intern", 
-          date: "2 days ago", 
-          rating: 4, 
+        {
+          _id: "1",
+          user: { name: "Sarthak K." },
+          role: "SDE Intern",
+          date: "2 days ago",
+          rating: 4,
           location: "Bangalore",
           season: "Summer 2024",
           interviewType: "Internship",
-          difficulty: "Hard",
+          overallDifficulty: "Hard",
           offerStatus: "Accepted",
           tags: ["DSA", "Graphs", "DP"],
           rounds: [
-            { name: "Round 1", type: "Online Assessment", mode: "Online", difficulty: "Medium", topics: "2 Coding questions (Strings, Arrays)" },
-            { name: "Round 2", type: "Technical", mode: "Video Call", difficulty: "Hard", topics: "Graph DP problem, deeply discussed time complexity" },
-            { name: "Round 3", type: "HR", mode: "Video Call", difficulty: "Easy", topics: "Behavioral questions, Googleyness" }
+            { name: "Round 1", type: "Online Assessment", mode: "Online", difficulty: "Medium", questions: "2 Coding questions (Strings, Arrays)" },
+            { name: "Round 2", type: "Technical", mode: "Video Call", difficulty: "Hard", questions: "Graph DP problem, deeply discussed time complexity" },
+            { name: "Round 3", type: "HR", mode: "Video Call", difficulty: "Easy", questions: "Behavioral questions, Googleyness" },
           ],
-          compensation: {
-            stipend: "₹1,10,000/month",
-            base: "",
-            stocks: ""
-          },
-          experience: "The process was smooth but challenging. The OA was standard LeetCode medium. The technical round focused heavily on edge cases.",
+          stipend: "₹1,10,000/month",
+          mainExperience:
+            "The process was smooth but challenging. The OA was standard LeetCode medium. The technical round focused heavily on edge cases.",
           tips: "Focus on Graph algorithms and Dynamic Programming. Be vocal about your thought process during the interview.",
-          helpful: 12 
+          helpful: 12,
         },
-        { 
-          id: 2, 
-          user: "Ananya S.", 
-          role: "Frontend Engineer", 
-          date: "1 week ago", 
-          rating: 5, 
+        {
+          _id: "2",
+          user: { name: "Ananya S." },
+          role: "Frontend Engineer",
+          date: "1 week ago",
+          rating: 5,
           location: "Hyderabad",
           season: "Fall 2023",
           interviewType: "Full Time",
-          difficulty: "Medium",
+          overallDifficulty: "Medium",
           offerStatus: "Accepted",
           tags: ["System Design", "React", "Accessibility"],
           rounds: [
-            { name: "Round 1", type: "Machine Coding", mode: "Onsite", difficulty: "Medium", topics: "Build a nested comment system in React" },
-            { name: "Round 2", type: "System Design", mode: "Onsite", difficulty: "Medium", topics: "Design a news feed architecture" }
+            { name: "Round 1", type: "Machine Coding", mode: "Onsite", difficulty: "Medium", questions: "Build a nested comment system in React" },
+            { name: "Round 2", type: "System Design", mode: "Onsite", difficulty: "Medium", questions: "Design a news feed architecture" },
           ],
-          compensation: {
-            stipend: "",
-            base: "₹28 LPA",
-            stocks: "₹10 Lakhs over 4 years"
-          },
-          experience: "Very professional interviewers. They helped me when I got stuck on the system design round. The machine coding round required writing clean, accessible code.",
+          baseSalary: "₹28 LPA",
+          stocks: "₹10 Lakhs over 4 years",
+          mainExperience:
+            "Very professional interviewers. They helped me when I got stuck on the system design round. The machine coding round required writing clean, accessible code.",
           tips: "Brush up on web accessibility (ARIA) and performance optimization techniques.",
-          helpful: 8 
+          helpful: 8,
         },
-        { 
-          id: 3, 
-          user: "Rahul M.", 
-          role: "Backend Developer", 
-          date: "3 weeks ago", 
-          rating: 2, 
+        {
+          _id: "3",
+          user: { name: "Rahul M." },
+          role: "Backend Developer",
+          date: "3 weeks ago",
+          rating: 2,
           location: "Remote",
           season: "Winter 2023",
           interviewType: "Full Time",
-          difficulty: "Medium",
+          overallDifficulty: "Medium",
           offerStatus: "Rejected",
           tags: ["Java", "Spring Boot", "SQL"],
           rounds: [
-            { name: "Round 1", type: "Technical", mode: "Video Call", difficulty: "Medium", topics: "Java streams and SQL complex queries" },
-            { name: "Round 2", type: "Managerial", mode: "Video Call", difficulty: "Weird", topics: "Asked about gap year repeatedly" }
+            { name: "Round 1", type: "Technical", mode: "Video Call", difficulty: "Medium", questions: "Java streams and SQL complex queries" },
+            { name: "Round 2", type: "Managerial", mode: "Video Call", difficulty: "Weird", questions: "Asked about gap year repeatedly" },
           ],
-          compensation: { stipend: "", base: "", stocks: "" },
-          experience: "Everything went well until the hiring manager round. After that, no response for weeks. Very unprofessional behavior from HR considering the size of the company.",
+          mainExperience:
+            "Everything went well until the hiring manager round. After that, no response for weeks. Very unprofessional behavior from HR considering the size of the company.",
           tips: "Make sure you have a good explanation for any career gaps.",
-          helpful: 45 
+          helpful: 45,
         },
       ];
 
-      const sortedReviews = mockReviews.sort((a, b) => b.rating - a.rating);
-      
-      setReviews(sortedReviews);
+      setReviews(mockReviews);
+      const acceptedCount = mockReviews.filter(r => r.offerStatus === 'Accepted').length;
+      setStats({ total: mockReviews.length, difficulty: 'Medium-Hard', acceptanceRate: `${Math.round((acceptedCount / mockReviews.length) * 100)}%` });
       setLoading(false);
     };
 
@@ -117,274 +113,175 @@ export default function CompanyDetailsPage() {
       <div className="min-h-screen bg-slate-50 flex flex-col font-sans">
         <Navbar />
         <div className="flex-grow flex items-center justify-center">
-          <div className="flex flex-col items-center gap-4">
-            <div className="animate-spin rounded-full h-12 w-12 border-4 border-slate-200 border-t-violet-600"></div>
-            <p className="text-slate-500 font-medium animate-pulse">Loading company insights...</p>
+          <div className="flex flex-col items-center gap-6">
+            <div className="relative">
+              <div className="absolute inset-0 bg-purple-200 blur-xl opacity-50 rounded-full animate-pulse"></div>
+              <div className="relative animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-purple-600 shadow-lg"></div>
+            </div>
+            <p className="text-slate-500 font-medium tracking-widest uppercase text-xs animate-pulse">Loading {id}...</p>
           </div>
         </div>
-        <Footer />
       </div>
     );
   }
 
-  if (!company) return null;
-
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col font-sans">
+    <div className="min-h-screen bg-slate-50 flex flex-col font-sans selection:bg-purple-100 selection:text-purple-900">
       <Navbar />
 
-      <div className="flex-grow max-w-6xl mx-auto w-full px-4 sm:px-6 py-8">
-        
-        <Link to="/" className="inline-flex items-center text-slate-500 hover:text-violet-600 mb-6 group transition-colors">
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-2 group-hover:-translate-x-1 transition-transform"><path d="m15 18-6-6 6-6"/></svg>
-          Back to Companies
+      <main className="flex-grow max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-12 relative z-10">
+        <Link to="/" className="inline-flex items-center text-slate-500 hover:text-purple-700 mb-10 group transition-all duration-300 ease-out">
+          <div className="w-8 h-8 rounded-full bg-white border border-slate-200 flex items-center justify-center mr-3 group-hover:border-purple-300 group-hover:shadow-md transition-all">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="group-hover:-translate-x-0.5 transition-transform"><path d="m15 18-6-6 6-6"/></svg>
+          </div>
+          <span className="text-sm font-medium tracking-wide">Back to Browse</span>
         </Link>
 
-        <div className="bg-white rounded-2xl shadow-xl shadow-violet-200/50 border border-violet-100 overflow-hidden mb-12">
-          <div className="h-48 bg-gradient-to-br from-purple-700 via-violet-600 to-indigo-800 relative">
-            <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20"></div>
-            <div className="absolute bottom-0 left-0 w-full h-24 bg-gradient-to-t from-black/50 to-transparent"></div>
-          </div>
-          
-          <div className="px-8 pb-8">
-            <div className="relative flex flex-col md:flex-row justify-between items-start md:items-end -mt-16 mb-8 gap-6">
-              <div className="flex items-end gap-6">
-                <div className="p-1.5 bg-white rounded-2xl shadow-xl">
-                  <div className="w-32 h-32 bg-white rounded-xl flex items-center justify-center overflow-hidden border border-slate-100">
-                    <img 
-                      src={company.logo} 
-                      alt={company.name} 
-                      className="w-24 h-24 object-contain"
-                    />
-                  </div>
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
+          <div className="lg:col-span-4 lg:sticky lg:top-28 space-y-6">
+            <div className="bg-white rounded-3xl border border-slate-100 p-6 relative overflow-hidden group hover:border-purple-100 transition-all duration-500 shadow-xl shadow-slate-200/60 hover:shadow-purple-200/50">
+              <div className="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-purple-500 via-indigo-500 to-purple-500 animate-gradientMove"/>
+
+              <div className="flex items-center gap-5 mb-8 relative z-10">
+                <div className="w-20 h-20 bg-white rounded-2xl flex items-center justify-center p-3 shadow-sm border border-slate-100">
+                  <img src={company.logo} alt={company.name} onError={e => (e.target.src = 'https://logo.clearbit.com/google.com')} className="w-full h-full object-contain" />
                 </div>
-                <div className="mb-2">
-                  <h1 className="text-4xl font-bold text-slate-900 tracking-tight">{company.name}</h1>
-                  <p className="text-slate-500 font-medium flex items-center gap-2 mt-1">
-                    {company.industry} 
-                    <span className="w-1 h-1 rounded-full bg-slate-300"></span>
-                    {company.location}
-                  </p>
+                <div>
+                  <h1 className="text-3xl font-bold text-slate-900 capitalize tracking-tight">{company.name}</h1>
+                  <span className="inline-flex items-center px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-slate-100 text-slate-600 border border-slate-200 mt-2">Technology</span>
                 </div>
               </div>
 
-              <div className="flex gap-3 w-full md:w-auto mb-2">
-                <a 
-                  href={company.website} 
-                  target="_blank" 
-                  rel="noreferrer"
-                  className="flex-1 md:flex-none justify-center px-5 py-2.5 bg-white border border-slate-200 hover:border-violet-200 hover:bg-violet-50 hover:text-violet-700 text-slate-700 rounded-xl text-sm font-semibold transition-all flex items-center gap-2"
-                >
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
-                  Website
-                </a>
-                <button className="flex-1 md:flex-none justify-center px-5 py-2.5 bg-violet-600 hover:bg-violet-700 text-white rounded-xl text-sm font-semibold transition-all shadow-lg shadow-violet-500/30 flex items-center gap-2 active:scale-95">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>
-                  Follow
-                </button>
+              <div className="grid grid-cols-2 gap-4 pt-6 border-t border-slate-50 relative z-10">
+                <div className="text-center p-4 bg-slate-50 rounded-2xl border border-slate-100 hover:bg-slate-100 transition-colors">
+                  <div className="text-[10px] text-slate-500 font-bold uppercase tracking-widest mb-1">Interviews</div>
+                  <div className="text-2xl font-bold text-slate-900">{stats.total}</div>
+                </div>
+                <div className="text-center p-4 bg-slate-50 rounded-2xl border border-slate-100 hover:bg-slate-100 transition-colors">
+                  <div className="text-[10px] text-slate-500 font-bold uppercase tracking-widest mb-1">Offer Rate</div>
+                  <div className="text-2xl font-bold text-emerald-600">{stats.acceptanceRate}</div>
+                </div>
               </div>
-            </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-              <div className="lg:col-span-2">
-                <h3 className="text-lg font-bold text-slate-900 mb-3">About</h3>
-                <p className="text-slate-600 leading-relaxed text-base">
-                  {company.description}
-                </p>
-              </div>
-              
-              <div className="bg-violet-50/50 rounded-2xl p-5 border border-violet-100">
-                <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider mb-4 opacity-70">At a Glance</h3>
-                <div className="space-y-4">
-                  <div className="flex justify-between items-center pb-3 border-b border-violet-100 last:border-0 last:pb-0">
-                    <span className="text-slate-500 text-sm">Overall Rating</span>
-                    <div className="flex items-center gap-1.5 bg-white px-2 py-1 rounded-md border border-violet-200 shadow-sm">
-                      <span className="font-bold text-slate-900">{company.overallRating}</span>
-                      <svg className="w-4 h-4 text-yellow-400 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
-                    </div>
-                  </div>
-                  <div className="flex justify-between items-center pb-3 border-b border-violet-100 last:border-0 last:pb-0">
-                    <span className="text-slate-500 text-sm">Avg Difficulty</span>
-                    <span className="font-semibold text-orange-600 text-sm bg-orange-50 px-2 py-0.5 rounded">{company.difficulty}</span>
-                  </div>
-                  <div className="flex justify-between items-center pb-3 border-b border-violet-100 last:border-0 last:pb-0">
-                    <span className="text-slate-500 text-sm">Total Interviews</span>
-                    <span className="font-bold text-slate-900">{company.totalReviews}</span>
-                  </div>
+              <div className="mt-6 pt-6 border-t border-slate-50 relative z-10">
+                <div className="flex items-center justify-between text-sm mb-3">
+                  <span className="text-slate-500 font-medium">Difficulty</span>
+                  <span className={`font-bold px-2 py-0.5 rounded text-xs ${stats.difficulty === 'Easy' ? 'text-emerald-700 bg-emerald-50' : stats.difficulty === 'Hard' ? 'text-red-700 bg-red-50' : 'text-amber-700 bg-amber-50'}`}>{stats.difficulty}</span>
+                </div>
+                <div className="w-full bg-slate-100 rounded-full h-1.5 overflow-hidden">
+                  <div className={`h-full rounded-full transition-all duration-1000 ${stats.difficulty === 'Hard' ? 'w-[85%] bg-red-500' : stats.difficulty === 'Easy' ? 'w-[30%] bg-emerald-500' : 'w-[60%] bg-amber-500'}`} />
                 </div>
               </div>
             </div>
-          </div>
-        </div>
 
-        <div className="flex flex-col md:flex-row items-end justify-between mb-8 gap-4 border-b border-slate-200 pb-6">
-          <div>
-            <h2 className="text-2xl font-bold text-slate-900 tracking-tight">Recent Interviews</h2>
-            <p className="text-slate-500 mt-1">Real experiences shared by candidates</p>
-          </div>
-          <div className="flex items-center gap-3">
-             <div className="text-sm font-medium text-slate-500">Sort by:</div>
-             <select className="bg-white border border-slate-200 text-slate-700 text-sm rounded-lg focus:ring-violet-500 focus:border-violet-500 block p-2.5 font-medium cursor-pointer hover:border-violet-300 transition-colors">
-               <option>Highest Rating</option>
-               <option>Lowest Rating</option>
-               <option>Newest First</option>
-             </select>
-          </div>
-        </div>
-
-        <div className="grid grid-cols-1 gap-8">
-          {reviews.map((review) => (
-            <div 
-              key={review.id} 
-              className="group bg-white p-6 sm:p-8 rounded-2xl shadow-sm border border-violet-50 hover:shadow-xl hover:shadow-violet-200/40 hover:border-violet-200 transition-all duration-300"
-            >
-              <div className="flex flex-col md:flex-row justify-between items-start gap-4 mb-6">
-                <div className="flex items-start gap-4">
-                  <div className={`w-12 h-12 rounded-full flex items-center justify-center text-white font-bold text-lg shadow-sm flex-shrink-0
-                    ${['bg-violet-600', 'bg-purple-600', 'bg-fuchsia-600', 'bg-indigo-600'][review.id % 4]}`}>
-                    {review.user.charAt(0)}
-                  </div>
-                  <div>
-                    <h3 className="font-bold text-slate-900 text-lg">{review.role}</h3>
-                    <div className="flex flex-wrap items-center gap-2 mt-1">
-                      <span className="text-sm text-slate-500 font-medium">{review.user}</span>
-                      <span className="text-slate-300">•</span>
-                      <span className="text-sm text-slate-500">{review.date}</span>
-                      <span className="text-slate-300">•</span>
-                      <span className="text-sm text-slate-500">{review.season}</span>
-                      <span className="text-slate-300">•</span>
-                      <span className="text-sm text-slate-500">{review.location}</span>
-                    </div>
-                    <div className="flex flex-wrap gap-2 mt-3">
-                        <span className="px-2.5 py-1 bg-slate-100 text-slate-600 text-xs font-semibold rounded-md border border-slate-200">
-                          {review.interviewType}
-                        </span>
-                        <span className={`px-2.5 py-1 text-xs font-semibold rounded-md border
-                          ${review.difficulty === 'Easy' ? 'bg-green-50 text-green-700 border-green-200' : 
-                            review.difficulty === 'Medium' ? 'bg-yellow-50 text-yellow-700 border-yellow-200' : 
-                            'bg-red-50 text-red-700 border-red-200'}`}>
-                          {review.difficulty}
-                        </span>
-                        {review.tags.map(tag => (
-                          <span key={tag} className="px-2.5 py-1 bg-violet-50 text-violet-700 text-xs font-semibold rounded-md border border-violet-100">
-                            {tag}
-                          </span>
-                        ))}
-                    </div>
-                  </div>
-                </div>
-                
-                <div className="flex flex-col items-end gap-2">
-                  {review.offerStatus === 'Accepted' ? (
-                     <div className="flex items-center gap-1.5 px-3 py-1 bg-emerald-50 text-emerald-700 text-xs font-bold uppercase tracking-wide rounded-full border border-emerald-100">
-                       <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-                       Accepted
-                     </div>
-                  ) : (
-                     <div className="flex items-center gap-1.5 px-3 py-1 bg-rose-50 text-rose-700 text-xs font-bold uppercase tracking-wide rounded-full border border-rose-100">
-                       <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-                       Rejected
-                     </div>
-                  )}
-                  <div className="flex items-center gap-1">
-                    {[...Array(5)].map((_, i) => (
-                      <svg 
-                        key={i}
-                        xmlns="http://www.w3.org/2000/svg" 
-                        width="16" 
-                        height="16" 
-                        viewBox="0 0 24 24" 
-                        fill={i < review.rating ? "#FBBF24" : "none"} 
-                        stroke={i < review.rating ? "#FBBF24" : "#CBD5E1"} 
-                        strokeWidth="1.5"
-                      >
-                        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
-                      </svg>
-                    ))}
-                  </div>
-                </div>
+            <div className="bg-slate-900 rounded-3xl shadow-xl p-1 relative overflow-hidden group">
+              <div className="bg-slate-900 rounded-[22px] p-6 text-center relative h-full transition-all">
+                 <h3 className="text-white font-bold text-lg mb-2">Interviewed here?</h3>
+                 <p className="text-slate-400 text-sm mb-6 leading-relaxed">Share your questions and help the community grow.</p>
+                 <Link to="/add-review" className="block w-full py-3.5 px-4 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-bold rounded-xl transition-all shadow-lg hover:shadow-purple-500/30 hover:scale-[1.02] active:scale-[0.98]">Submit Experience</Link>
               </div>
+            </div>
+          </div>
 
-              {(review.compensation.stipend || review.compensation.base || review.compensation.stocks) && (
-                <div className="mb-6 p-4 bg-violet-50/30 rounded-xl border border-violet-100 flex flex-wrap gap-6">
-                  {review.compensation.stipend && (
-                    <div>
-                      <div className="text-xs text-slate-500 uppercase font-semibold tracking-wide">Stipend</div>
-                      <div className="text-slate-800 font-bold">{review.compensation.stipend}</div>
-                    </div>
-                  )}
-                  {review.compensation.base && (
-                    <div>
-                      <div className="text-xs text-slate-500 uppercase font-semibold tracking-wide">Base Salary</div>
-                      <div className="text-slate-800 font-bold">{review.compensation.base}</div>
-                    </div>
-                  )}
-                  {review.compensation.stocks && (
-                    <div>
-                      <div className="text-xs text-slate-500 uppercase font-semibold tracking-wide">Stocks/Bonus</div>
-                      <div className="text-slate-800 font-bold">{review.compensation.stocks}</div>
-                    </div>
-                  )}
+          <div className="lg:col-span-8 space-y-6">
+            <div className="flex items-center justify-between pb-4 border-b border-slate-200">
+              <h2 className="text-2xl font-bold text-slate-900 tracking-tight">Recent Experiences</h2>
+              <div className="text-xs font-medium text-slate-500 bg-white px-3 py-1.5 rounded-full border border-slate-200 shadow-sm">Showing {reviews.length} results</div>
+            </div>
+
+            {reviews.length === 0 ? (
+              <div className="bg-white rounded-3xl p-16 text-center border border-dashed border-slate-300">
+                <div className="mx-auto w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center text-slate-400 mb-4">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
                 </div>
-              )}
-
-              <div className="mb-6">
-                 <h4 className="text-sm font-bold text-slate-900 mb-3 uppercase tracking-wide">Experience</h4>
-                 <p className="text-slate-600 leading-relaxed text-base whitespace-pre-line">
-                   {review.experience}
-                 </p>
+                <h3 className="text-lg font-medium text-slate-900">No reviews yet</h3>
+                <p className="text-slate-500 mt-2 text-sm">Be the first to share your experience!</p>
               </div>
+            ) : (
+              reviews.map(exp => (
+                <div key={exp._id} className="bg-white p-6 md:p-8 rounded-3xl border border-slate-100 transition-all duration-300 hover:border-purple-200 hover:shadow-xl hover:shadow-purple-500/5 hover:-translate-y-0.5 group relative overflow-hidden">
+                  <div className="absolute top-0 right-0 w-64 h-64 bg-purple-50 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
 
-              {review.rounds.length > 0 && (
-                <div className="mb-6">
-                  <h4 className="text-sm font-bold text-slate-900 mb-3 uppercase tracking-wide">Interview Rounds</h4>
-                  <div className="space-y-3">
-                    {review.rounds.map((round, idx) => (
-                      <div key={idx} className="p-3 border border-violet-100 rounded-lg bg-white shadow-sm">
-                        <div className="flex flex-wrap items-center gap-2 mb-1">
-                          <span className="font-semibold text-slate-800 text-sm">{round.name}:</span>
-                          <span className="text-sm text-slate-600">{round.type}</span>
-                          <span className="text-slate-300">•</span>
-                          <span className="text-xs px-2 py-0.5 bg-slate-100 rounded text-slate-500">{round.mode}</span>
-                          <span className={`text-xs px-2 py-0.5 rounded ${
-                            round.difficulty === 'Easy' ? 'bg-green-50 text-green-700' :
-                            round.difficulty === 'Medium' ? 'bg-yellow-50 text-yellow-700' : 'bg-red-50 text-red-700'
-                          }`}>{round.difficulty}</span>
+                  <div className="flex flex-col sm:flex-row justify-between items-start gap-4 mb-8 relative z-10">
+                    <div className="flex items-start gap-4">
+                      <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-slate-100 to-slate-200 flex items-center justify-center text-slate-600 font-bold text-lg border border-slate-200 shadow-sm">{exp.user?.name ? exp.user.name.charAt(0) : 'A'}</div>
+
+                      <div>
+                        <h3 className="font-bold text-slate-900 text-xl tracking-tight group-hover:text-purple-700 transition-colors">{exp.role}</h3>
+                        <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mt-1.5 text-sm text-slate-500">
+                          <span className="font-medium text-slate-700">{exp.user?.name || 'Anonymous'}</span>
+                          <span className="w-1 h-1 bg-slate-300 rounded-full"></span>
+                          <span>{exp.season || 'Recent'}</span>
+                          <span className="w-1 h-1 bg-slate-300 rounded-full"></span>
+                          <span className="flex items-center gap-1"><svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>{exp.location || 'Remote'}</span>
                         </div>
-                        <p className="text-sm text-slate-500 italic border-l-2 border-violet-300 pl-3 mt-1">
-                          "{round.topics}"
-                        </p>
                       </div>
-                    ))}
+                    </div>
+
+                    <div className={`px-4 py-1.5 rounded-full text-[11px] font-bold border uppercase tracking-widest flex items-center gap-2 ${exp.offerStatus?.toLowerCase().includes('accept') ? 'bg-emerald-50 text-emerald-700 border-emerald-100' : 'bg-slate-50 text-slate-600 border-slate-200'}`}> <span className={`w-1.5 h-1.5 rounded-full ${exp.offerStatus?.toLowerCase().includes('accept') ? 'bg-emerald-500' : 'bg-slate-400'}`} /> {exp.offerStatus || 'Pending'} </div>
                   </div>
-                </div>
-              )}
 
-              {review.tips && (
-                <div className="mb-6 bg-violet-50 border border-violet-200 p-4 rounded-xl">
-                   <div className="flex items-center gap-2 mb-2">
-                     <span className="text-lg">💡</span>
-                     <h4 className="text-sm font-bold text-violet-900 uppercase tracking-wide">Tips for future candidates</h4>
-                   </div>
-                   <p className="text-violet-800 text-sm leading-relaxed">
-                     {review.tips}
-                   </p>
-                </div>
-              )}
+                  <div className="flex flex-wrap gap-2 mb-8 relative z-10">
+                    <span className="px-3 py-1 bg-slate-50 text-slate-600 text-xs font-medium rounded-lg border border-slate-200">{exp.interviewType}</span>
+                    <span className={`px-3 py-1 text-xs font-medium rounded-lg border ${exp.overallDifficulty === 'Easy' ? 'bg-green-50 text-green-700 border-green-200' : exp.overallDifficulty === 'Hard' ? 'bg-red-50 text-red-700 border-red-200' : 'bg-yellow-50 text-yellow-700 border-yellow-200'}`}>Difficulty: {exp.overallDifficulty}</span>
+                    {exp.tags && exp.tags.map((tag, idx) => <span key={idx} className="px-3 py-1 bg-purple-50 text-purple-700 text-xs font-medium rounded-lg border border-purple-100">{tag.trim()}</span>)}
+                  </div>
 
-              <div className="mt-6 pt-6 border-t border-slate-50 flex items-center justify-between">
-                <button className="text-slate-400 hover:text-violet-600 text-sm font-medium flex items-center gap-2 transition-colors">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/></svg>
-                  Helpful ({review.helpful})
-                </button>
-                <button className="text-slate-400 hover:text-slate-600 text-sm font-medium">
-                  Report
-                </button>
-              </div>
-            </div>
-          ))}
+                  {(exp.stipend || exp.baseSalary) && (
+                    <div className="mb-8 p-5 bg-slate-50 rounded-2xl border border-slate-100 grid grid-cols-1 sm:grid-cols-2 gap-6 relative z-10">
+                      {exp.stipend && (
+                        <div>
+                          <div className="text-[10px] text-slate-400 uppercase font-bold tracking-widest mb-1.5">Stipend</div>
+                          <div className="text-slate-900 font-mono text-lg font-semibold">{exp.stipend}</div>
+                        </div>
+                      )}
+                      {exp.baseSalary && (
+                        <div>
+                          <div className="text-[10px] text-slate-400 uppercase font-bold tracking-widest mb-1.5">Base Salary</div>
+                          <div className="text-slate-900 font-mono text-lg font-semibold">{exp.baseSalary}</div>
+                        </div>
+                      )}
+                    </div>
+                  )}
+
+                  <div className="mb-8 relative z-10">
+                    <h4 className="text-xs font-bold text-slate-900 mb-3 uppercase tracking-widest">Experience</h4>
+                    <p className="text-slate-600 leading-relaxed whitespace-pre-wrap text-sm">{exp.mainExperience}</p>
+                  </div>
+
+                  {exp.rounds && exp.rounds.length > 0 && (
+                    <div className="space-y-3 mb-8 relative z-10">
+                      {exp.rounds.map((round, idx) => (
+                        <div key={idx} className="bg-white border border-slate-100 rounded-xl p-4 hover:bg-slate-50/80 transition-colors">
+                          <div className="flex justify-between items-center mb-2">
+                            <span className="font-bold text-slate-800 text-sm flex items-center gap-2">
+                              <span className="w-5 h-5 rounded flex items-center justify-center bg-slate-100 text-[10px] text-slate-500">{idx + 1}</span>
+                              {round.type}
+                            </span>
+                            <span className="text-[10px] text-slate-500 font-bold uppercase tracking-wider px-2 py-1 bg-slate-100 rounded-md">{round.difficulty}</span>
+                          </div>
+                          <p className="text-sm text-slate-500 pl-7 border-l-2 border-slate-200">"{round.questions}"</p>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  {exp.tips && (
+                    <div className="bg-gradient-to-r from-purple-50 to-indigo-50 p-5 rounded-2xl border border-purple-100 flex gap-4 relative z-10">
+                      <div className="shrink-0 flex items-center justify-center w-8 h-8 rounded-full bg-white border border-purple-100 text-lg shadow-sm">💡</div>
+                      <div>
+                        <h4 className="text-[10px] font-bold text-purple-900 uppercase tracking-widest mb-1.5">Advice for Candidates</h4>
+                        <p className="text-purple-800 text-sm leading-relaxed">{exp.tips}</p>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              ))
+            )}
+          </div>
         </div>
-      </div>
+      </main>
+
       <Footer />
     </div>
   );

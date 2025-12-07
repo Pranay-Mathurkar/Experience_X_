@@ -293,6 +293,29 @@ const login = async (req, res) => {
 };
 
 
+const getCompanyExperiences = async (req, res) => {
+  try {
+    const { companyName } = req.params;
+
+    const experiences = await InterviewExperience.find({
+      company: { $regex: new RegExp(`^${companyName}$`, "i") }, // case-insensitive match
+    })
+      .populate("user", "name email")
+      .sort({ createdAt: -1 });
+
+    return res.status(httpStatus.OK).json({
+      success: true,
+      data: experiences,
+    });
+  } catch (error) {
+    return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
+      success: false,
+      message: "Failed to fetch company experiences",
+      error: error.message,
+    });
+  }
+};
+
 export { 
 signup,
 login, 
@@ -301,6 +324,7 @@ getAllInterviewExperiences,
 getSingleInterviewExperience,
 updateInterviewExperience,
 getMyInterviewExperiences,
+getCompanyExperiences,
 
 };
 

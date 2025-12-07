@@ -20,7 +20,7 @@ export default function LoginPage() {
 
       <div className="flex-grow flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 relative z-10">
         
-        <div className="flex w-full max-w-5xl min-h-[600px] bg-white rounded-3xl shadow-2xl shadow-purple-900/10 overflow-hidden border border-white/50 animate-slide-up backdrop-blur-sm">
+        <div className="flex w-full max-w-5xl min-h-[600px] bg-white/80 rounded-3xl shadow-2xl shadow-purple-900/10 overflow-hidden border border-white/50 animate-slide-up backdrop-blur-sm">
           
           <div className="w-full md:w-1/2 p-8 md:p-12 flex items-center justify-center relative">
             <div className="w-full max-w-md animate-fade-in delay-100">

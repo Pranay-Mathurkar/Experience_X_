@@ -3,6 +3,10 @@ import LoginPage from "./pages/LoginPage";
 import MainPage from "./pages/MainPage";
 import AddReviewPage from "./components/mainPage/AddReviewPage";
 import CompanyDetailsPage from "./components/mainPage/CompanyDetailsPage";
+import FeaturesPage from "./pages/FeaturesPage";
+import PricingPage from "./pages/PricingPage";
+import AboutPage from "./pages/AboutPage";
+
 export default function App() {
   return (
     <BrowserRouter>
@@ -11,6 +15,9 @@ export default function App() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/add-review" element={<AddReviewPage />} />
         <Route path="/company/:id" element={<CompanyDetailsPage />} />
+       <Route path="/features" element={<FeaturesPage />} /> 
+       <Route path="/pricing" element={<PricingPage/>} />
+       <Route path="/about" element={<AboutPage/>} />
       </Routes>
     </BrowserRouter>
   );

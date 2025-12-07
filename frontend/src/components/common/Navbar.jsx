@@ -23,11 +23,6 @@ export function Navbar() {
     { name: 'Pricing', to: '/pricing' },
     { name: 'About', to: '/about' },
   ];
-const navLinks = [
-  { name: 'Home', href: '/' },
-  { name: 'About', href: '/about' },
-  { name: 'Share Experience', href: '/share-experience' },
-];
 
   return (
     <>
@@ -88,29 +83,20 @@ const navLinks = [
                 )}
               </button>
             </div>
-
           </div>
         </div>
 
         <div className={`md:hidden absolute top-full left-0 right-0 bg-white border-b border-purple-100 shadow-xl transition-all duration-300 ease-in-out overflow-hidden ${isMobileMenuOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}>
           <div className="px-6 py-6 space-y-4 flex flex-col">
             {navLinks.map(link => (
-              <NavLink key={link.name} to={link.to} className="text-base font-medium text-slate-600 hover:text-purple-600 hover:pl-2 transition-all" onClick={() => setIsMobileMenuOpen(false)}>
+              <NavLink 
+                key={link.name} 
+                to={link.to} 
+                className="text-base font-medium text-slate-600 hover:text-purple-600 hover:pl-2 transition-all"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
                 {link.name}
               </NavLink>
-            {navLinks.map((link) => (
-              <a
-               key={link.name}
-  href={link.href}
-  onClick={(e) => {
-    e.preventDefault();
-    window.location.href = link.href;
-  }}
-  className="text-sm font-medium text-slate-600 hover:text-purple-600 transition-colors relative group"
->
-  {link.name}
-  <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-purple-600 transition-all duration-300 group-hover:w-full" />
-</a>
             ))}
 
             <hr className="border-slate-100" />
@@ -128,7 +114,6 @@ const navLinks = [
       </nav>
 
       <div className="h-20 md:h-24" aria-hidden="true" />
-
       {isMobileMenuOpen && <div className="fixed inset-0 z-40 bg-black/20 backdrop-blur-sm md:hidden" onClick={() => setIsMobileMenuOpen(false)} />}
     </>
   );

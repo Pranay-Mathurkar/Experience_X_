@@ -8,7 +8,7 @@ import { AuthProvider } from "./contexts/AuthContext";
 import Company from "./pages/company";
 import ExperienceDetail from "./pages/detail";
 import MyAccount from "./pages/myaccount";
-
+import EditExperiencePage from "./pages/EditExperiencePage";
 
 export default function App() {
   return (

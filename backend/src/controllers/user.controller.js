@@ -133,7 +133,7 @@ const login = async (req, res) => {
       mainExperience,
       tips,
       rounds,
-      codingLinks,
+     
     } = req.body;
 
     if (!company || !role || !mainExperience) {
@@ -158,7 +158,7 @@ const login = async (req, res) => {
       mainExperience,
       tips,
       rounds,
-      codingLinks,
+     
     });
 
     return res.status(httpStatus.CREATED).json({

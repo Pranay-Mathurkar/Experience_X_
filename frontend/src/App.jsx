@@ -8,23 +8,25 @@ import { AuthProvider } from "./contexts/AuthContext";
 import Company from "./pages/company";
 import ExperienceDetail from "./pages/detail";
 import MyAccount from "./pages/myaccount";
-
+import { GoogleOAuthProvider } from "@react-oauth/google";
 
 export default function App() {
   return (
-    <BrowserRouter>
-      <AuthProvider>
-        <Routes>
-          <Route path="/home" element={<MainPage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/share-experience" element={<ShareExperienceForm />} />
-          <Route path="/signup" element={<SignupPage />} />
-          <Route path="/about" element={<AboutPage />} />
-          <Route path="/company/:companyName" element={<Company />} />
-          <Route path="/experience/:id" element={<ExperienceDetail />} />
+    <GoogleOAuthProvider clientId="381584583012-olmoapqkkp793s9f6kohca34lnks6m7t.apps.googleusercontent.com">
+      <BrowserRouter>
+        <AuthProvider>
+          <Routes>
+            <Route path="/home" element={<MainPage />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/share-experience" element={<ShareExperienceForm />} />
+            <Route path="/signup" element={<SignupPage />} />
+            <Route path="/about" element={<AboutPage />} />
+            <Route path="/company/:companyName" element={<Company />} />
+            <Route path="/experience/:id" element={<ExperienceDetail />} />
             <Route path="/account" element={<MyAccount />} />
-        </Routes>
-      </AuthProvider>
-    </BrowserRouter>
+          </Routes>
+        </AuthProvider>
+      </BrowserRouter>
+    </GoogleOAuthProvider>
   );
 }

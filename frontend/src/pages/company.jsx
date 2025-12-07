@@ -1480,7 +1480,10 @@ export default function Company() {
       });
 
       const user = res.data.user;
-      setIsFollowing(user.followedCompanies?.includes(companyName));
+      setIsFollowing(
+  user.followedCompanies?.includes(companyName.toLowerCase())
+);
+
       setBookmarks(user.bookmarks || []);
     } catch (err) {
       console.error("Failed to fetch user profile");
@@ -1495,11 +1498,14 @@ export default function Company() {
     try {
       const res = await axios.post(
         `${API}/follow-company`,
-        { companyName },
+       { companyName: companyName.toLowerCase() },
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
-      setIsFollowing(res.data.followedCompanies.includes(companyName));
+      setIsFollowing(
+  res.data.followedCompanies.includes(companyName.toLowerCase())
+);
+
     } catch (error) {
       alert("Follow failed");
     }

@@ -6,7 +6,11 @@ import { useNavigate } from "react-router-dom";
 const initialRound = { roundType: "", mode: "", difficulty: "", questions: "" };
 
 export default function ShareExperiencePage() {
-  const { user, token } = useAuth(); 
+
+  const { user } = useAuth();
+const token = localStorage.getItem("token");
+
+
   const navigate = useNavigate();
 
   const [form, setForm] = useState({
@@ -100,30 +104,32 @@ export default function ShareExperiencePage() {
       return;
     }
 
-    if (!token) {
-      setError("You must be logged in to submit.");
-      return;
-    }
+   if (!user || !token) {
+  setError("You must be logged in to submit.");
+  navigate("/login");
+  return;
+}
+
 
     try {
       setSubmitting(true);
 
-      const res = await fetch("http://localhost:3000/api/share-experience", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`, 
-        },
-        body: JSON.stringify({
-          ...form,
-          tags: form.tags
-            .split(",")
-            .map((t) => t.trim())
-            .filter(Boolean),
-          codingLinks: codingLinks.filter((l) => l.url.trim() !== ""),
-          userId: user?._id || user?.id,
-        }),
-      });
+     const res = await fetch("http://localhost:3000/api/share-experience", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+    Authorization: `Bearer ${token}`,
+  },
+  body: JSON.stringify({
+    ...form,
+    tags: form.tags
+      .split(",")
+      .map((t) => t.trim())
+      .filter(Boolean),
+    codingLinks: codingLinks.filter((l) => l.url.trim() !== ""),
+  }),
+});
+
 
       if (!res.ok) throw new Error("Failed to submit");
 
@@ -166,7 +172,7 @@ export default function ShareExperiencePage() {
       <div className="max-w-4xl mx-auto">
 
         <button
-          onClick={() => navigate("/")}
+          onClick={() => navigate("/home")}
           className="group flex items-center text-slate-500 mb-8 hover:text-purple-600 transition"
         >
           <span className="mr-2 text-xl group-hover:-translate-x-1 transition">←</span>

@@ -1,7 +1,12 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { useAuth } from "../contexts/AuthContext";
 
 export default function AuthForm() {
+
+  const { handleLogin, handleSignup } = useAuth();
+
+  
   const [isLogin, setIsLogin] = useState(true); 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -21,10 +26,10 @@ export default function AuthForm() {
     if (password.length < 6) return "Password must be at least 6 characters";
     return null;
   }
-
-  async function handleSubmit(e) {
+async function handleSubmit(e) {
     e.preventDefault();
     setError(null);
+
     const v = validate();
     if (v) {
       setError(v);
@@ -32,22 +37,17 @@ export default function AuthForm() {
     }
 
     setLoading(true);
-   
-    const endpoint = isLogin ? "/api/login" : "/api/signup";
-    const payload = isLogin ? { email, password } : { name, email, password };
 
     try {
-      
-      console.log(`Submitting to ${endpoint}`, payload);
-      
-     
-      await new Promise(resolve => setTimeout(resolve, 1500)); 
-
-      
-      window.location.href = "/dashboard";
-      
+      if (isLogin) {
+        // ✅ LOGIN
+        await handleLogin(email, password);
+      } else {
+        // ✅ SIGNUP
+        await handleSignup(name, email, password);
+      }
     } catch (err) {
-      setError(err.message || "Something went wrong");
+      setError(err.response?.data?.message || err.message || "Something went wrong");
     } finally {
       setLoading(false);
     }

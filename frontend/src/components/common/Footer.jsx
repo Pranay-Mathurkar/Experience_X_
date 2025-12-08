@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 export function Footer() {
   const currentYear = new Date().getFullYear();
@@ -9,8 +10,9 @@ export function Footer() {
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-12 mb-16">
           
+          {/* Brand Section */}
           <div className="lg:col-span-5 space-y-6">
-            <div className="flex items-center gap-2.5 cursor-pointer w-fit" onClick={() => window.location.href = "/"}>
+            <Link to="/" className="flex items-center gap-2.5 cursor-pointer w-fit">
               <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-br from-purple-600 to-indigo-600 text-white shadow-lg shadow-purple-900/20">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M12 2v20"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
@@ -19,7 +21,7 @@ export function Footer() {
               <span className="text-2xl font-bold tracking-tight text-white">
                 Interview<span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-indigo-400">Archive</span>
               </span>
-            </div>
+            </Link>
             
             <p className="text-slate-400 leading-relaxed text-sm max-w-sm">
               Democratizing interview knowledge for students. We help engineers crack their dream jobs at top tech companies through verified, anonymous shared experiences.
@@ -45,24 +47,26 @@ export function Footer() {
             </div>
           </div>
 
+          {/* Links Section */}
           <div className="lg:col-span-3 md:col-span-1">
             <h3 className="text-white font-semibold mb-6 tracking-wide text-sm uppercase">Explore</h3>
             <ul className="space-y-4">
               {[
-                { name: "Browse Companies", href: "/" },
-                { name: "Features", href: "/features" },
-                { name: "Pricing", href: "/pricing" },
-                { name: "About Us", href: "/about" }
+                { name: "Browse Companies", to: "/" },
+                { name: "Features", to: "/features" },
+                { name: "Pricing", to: "/pricing" },
+                { name: "About Us", to: "/about" }
               ].map((item) => (
                 <li key={item.name}>
-                  <a href={item.href} className="text-sm hover:text-purple-400 transition-colors duration-200 block">
+                  <Link to={item.to} className="text-sm hover:text-purple-400 transition-colors duration-200 block">
                     {item.name}
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>
           </div>
 
+          {/* Newsletter Section */}
           <div className="lg:col-span-4 md:col-span-1">
             <h3 className="text-white font-semibold mb-6 tracking-wide text-sm uppercase">Stay Updated</h3>
             <p className="text-sm text-slate-400 mb-4">
@@ -84,13 +88,14 @@ export function Footer() {
 
         </div>
 
+        {/* Bottom Bar */}
         <div className="pt-8 border-t border-slate-800/50 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-sm text-slate-500">
             © {currentYear} Interview Archive. Built with <span className="text-red-500 animate-pulse">♥</span> at MNNIT Allahabad.
           </p>
           <div className="flex gap-6 text-sm">
-            <a href="/login" className="text-slate-500 hover:text-white transition-colors">Log In</a>
-            <a href="/login" className="text-slate-500 hover:text-white transition-colors">Sign Up</a>
+            <Link to="/login" className="text-slate-500 hover:text-white transition-colors">Log In</Link>
+            <Link to="/signup" className="text-slate-500 hover:text-white transition-colors">Sign Up</Link>
           </div>
         </div>
 

@@ -36,6 +36,7 @@ export function Navbar() {
         <div className="max-w-7xl mx-auto px-4 sm:px-8">
           <div className="flex justify-between items-center">
             
+            {/* Logo */}
             <div 
               className="flex items-center gap-3 cursor-pointer group" 
               onClick={() => navigate('/')}
@@ -52,6 +53,7 @@ export function Navbar() {
               </span>
             </div>
 
+            {/* Desktop Nav */}
             <div className="hidden md:flex items-center gap-8">
               {navLinks.map((link) => (
                 <NavLink
@@ -66,8 +68,19 @@ export function Navbar() {
                   <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-purple-600 transition-all duration-300 group-hover:w-full" />
                 </NavLink>
               ))}
+              
+              {/* Chat Link (Only if logged in) */}
+              {isLoggedIn && (
+                <button
+                  onClick={() => navigate("/chat")}
+                  className="text-sm font-semibold text-indigo-600 hover:text-indigo-800 transition-colors"
+                >
+                  💬 Chats
+                </button>
+              )}
             </div>
 
+            {/* Desktop Auth Buttons */}
             <div className="hidden md:flex items-center gap-4">
               {!isLoggedIn ? (
                 <>
@@ -102,6 +115,7 @@ export function Navbar() {
               )}
             </div>
 
+            {/* Mobile Toggle */}
             <div className="md:hidden">
               <button
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -117,6 +131,7 @@ export function Navbar() {
           </div>
         </div>
 
+        {/* Mobile Menu */}
         <div
           className={`md:hidden absolute top-full left-0 right-0 bg-white border-b border-purple-100 shadow-xl transition-all duration-300 ease-in-out overflow-hidden ${
             isMobileMenuOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
@@ -136,6 +151,20 @@ export function Navbar() {
                 {link.name}
               </NavLink>
             ))}
+            
+            {/* Mobile Chat Button */}
+            {isLoggedIn && (
+              <button
+                onClick={() => {
+                  navigate("/chat");
+                  setIsMobileMenuOpen(false);
+                }}
+                className="text-base font-medium text-left text-indigo-600 hover:text-indigo-800 transition-all hover:pl-2"
+              >
+                💬 Chats
+              </button>
+            )}
+
             <hr className="border-slate-100" />
             
             <div className="flex flex-col gap-3 pt-2">

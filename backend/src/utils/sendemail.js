@@ -9,7 +9,6 @@ export const sendNewExperienceEmail = async (email, companyName) => {
         pass: process.env.EMAIL_PASSWORD,
       },
 
-      // ✅ VERY IMPORTANT FOR RENDER (prevents infinite hang)
      connectionTimeout: 3000,
 greetingTimeout: 3000,
 socketTimeout: 3000,

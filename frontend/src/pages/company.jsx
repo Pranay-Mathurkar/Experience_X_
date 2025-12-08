@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
+
 const ExperienceCard = ({ exp, isBookmarked, toggleBookmark, navigate }) => {
   const dateString = new Date(exp.createdAt).toLocaleDateString("en-US", {
     year: "numeric",
@@ -8,12 +9,11 @@ const ExperienceCard = ({ exp, isBookmarked, toggleBookmark, navigate }) => {
     day: "numeric",
   });
 
-  // ✅ ADD THIS FUNCTION
   const handleChatClick = (e) => {
-    e.stopPropagation(); // prevents opening experience detail
-    navigate(`/chat/${exp.user?._id}`); // sender → chat with experience owner
+    e.stopPropagation();
+    if (!exp.user?._id) return;
+    navigate(`/chat/${exp.user._id}`);
   };
-
 
   return (
     <article
@@ -100,14 +100,41 @@ const ExperienceCard = ({ exp, isBookmarked, toggleBookmark, navigate }) => {
 
         {exp.overallDifficulty && (
           <div className="inline-flex items-center gap-1.5">
-            <span className="inline-block w-1.5 h-1.5 rounded-full bg-emerald-400" />
+            <span
+              className={`inline-block w-1.5 h-1.5 rounded-full ${
+                exp.overallDifficulty === "Easy"
+                  ? "bg-green-400"
+                  : exp.overallDifficulty === "Medium"
+                  ? "bg-amber-400"
+                  : "bg-red-400"
+              }`}
+            />
             <dt className="sr-only">Difficulty</dt>
             <dd className="capitalize text-slate-500">
-              {exp.overallDifficulty} difficulty
+              {exp.overallDifficulty}
             </dd>
           </div>
         )}
       </dl>
+
+      {/* Tags */}
+      {exp.tags && exp.tags.length > 0 && (
+        <div className="flex flex-wrap gap-1.5 mb-3">
+          {exp.tags.slice(0, 3).map((tag, idx) => (
+            <span
+              key={idx}
+              className="inline-flex items-center px-2 py-0.5 rounded-md bg-indigo-50 text-indigo-700 text-[10px] font-medium"
+            >
+              {tag}
+            </span>
+          ))}
+          {exp.tags.length > 3 && (
+            <span className="inline-flex items-center px-2 py-0.5 rounded-md bg-slate-100 text-slate-600 text-[10px] font-medium">
+              +{exp.tags.length - 3}
+            </span>
+          )}
+        </div>
+      )}
 
       {/* Summary */}
       <p className="text-xs text-slate-700 mb-3 line-clamp-3 leading-relaxed">
@@ -127,33 +154,31 @@ const ExperienceCard = ({ exp, isBookmarked, toggleBookmark, navigate }) => {
           <span className="text-[10px] text-amber-600/80">/ 5</span>
         </div>
 
-         <div className="flex items-center gap-2">
-          {/* Chat button */}
+        <div className="flex items-center gap-2">
           <button
             onClick={handleChatClick}
-            className="text-[11px] font-semibold text-white bg-indigo-600 px-3 py-1.5 rounded-lg hover:bg-indigo-700"
+            className="text-[11px] font-semibold text-white bg-indigo-600 px-3 py-1.5 rounded-lg hover:bg-indigo-700 transition-colors"
           >
             💬 Chat
           </button>
 
-
-        <span className="inline-flex items-center gap-1 text-[11px] font-medium text-indigo-600 group-hover:gap-1.5 transition-all">
-          View details
-          <svg
-            className="w-3.5 h-3.5"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={1.6}
-              d="M13 7l5 5m0 0l-5 5m5-5H6"
-            />
-          </svg>
-        </span>
-          </div>
+          <span className="inline-flex items-center gap-1 text-[11px] font-medium text-indigo-600 group-hover:gap-1.5 transition-all">
+            View details
+            <svg
+              className="w-3.5 h-3.5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={1.6}
+                d="M13 7l5 5m0 0l-5 5m5-5H6"
+              />
+            </svg>
+          </span>
+        </div>
       </footer>
     </article>
   );
@@ -169,6 +194,17 @@ export default function Company() {
   const [isFollowing, setIsFollowing] = useState(false);
   const [bookmarks, setBookmarks] = useState([]);
   const [error, setError] = useState(null);
+
+  // Search & Filter States
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filterRole, setFilterRole] = useState("");
+  const [filterLocation, setFilterLocation] = useState("");
+  const [filterType, setFilterType] = useState("");
+  const [filterDifficulty, setFilterDifficulty] = useState("");
+  const [filterOfferStatus, setFilterOfferStatus] = useState("");
+  const [filterSeason, setFilterSeason] = useState("");
+  const [filterRating, setFilterRating] = useState("");
+  const [showFilters, setShowFilters] = useState(false);
 
   const token = localStorage.getItem("token");
   const API = "http://localhost:3000/api";
@@ -197,10 +233,11 @@ export default function Company() {
     try {
       const res = await axios.get(`${API}/me`, { headers });
       const user = res.data.user;
-      setIsFollowing(
-  user.followedCompanies?.includes(companyName.toLowerCase())
-);
-
+      // compare case-insensitively if needed
+      const following = (user.followedCompanies || []).some(
+        (c) => c.toLowerCase() === companyName.toLowerCase()
+      );
+      setIsFollowing(following);
       setBookmarks(user.bookmarks || []);
     } catch (err) {
       console.error("Failed to fetch user profile", err);
@@ -250,7 +287,62 @@ export default function Company() {
     }
   };
 
+  // Extract unique values for filters
+  const uniqueRoles = [...new Set(experiences.map((exp) => exp.role))].filter(
+    Boolean
+  );
+  const uniqueLocations = [
+    ...new Set(experiences.map((exp) => exp.location)),
+  ].filter(Boolean);
+  const uniqueSeasons = [
+    ...new Set(experiences.map((exp) => exp.season)),
+  ].filter(Boolean);
+
+  // Filter and search logic
+  const filteredExperiences = experiences.filter((exp) => {
+    const searchLower = searchTerm.toLowerCase();
+
+    const matchesSearch =
+      searchTerm === "" ||
+      exp.role?.toLowerCase().includes(searchLower) ||
+      exp.location?.toLowerCase().includes(searchLower) ||
+      exp.season?.toLowerCase().includes(searchLower) ||
+      exp.mainExperience?.toLowerCase().includes(searchLower) ||
+      exp.tips?.toLowerCase().includes(searchLower) ||
+      exp.tags?.some((tag) => tag.toLowerCase().includes(searchLower)) ||
+      exp.rounds?.some(
+        (round) =>
+          round.roundType?.toLowerCase().includes(searchLower) ||
+          round.questions?.toLowerCase().includes(searchLower)
+      );
+
+    const matchesRole = filterRole === "" || exp.role === filterRole;
+    const matchesLocation =
+      filterLocation === "" || exp.location === filterLocation;
+    const matchesType =
+      filterType === "" || exp.interviewType === filterType;
+    const matchesDifficulty =
+      filterDifficulty === "" || exp.overallDifficulty === filterDifficulty;
+    const matchesOfferStatus =
+      filterOfferStatus === "" || exp.offerStatus === filterOfferStatus;
+    const matchesSeason = filterSeason === "" || exp.season === filterSeason;
+    const matchesRating =
+      filterRating === "" || (exp.rating || 0) >= parseInt(filterRating, 10);
+
+    return (
+      matchesSearch &&
+      matchesRole &&
+      matchesLocation &&
+      matchesType &&
+      matchesDifficulty &&
+      matchesOfferStatus &&
+      matchesSeason &&
+      matchesRating
+    );
+  });
+
   const totalInterviews = experiences.length;
+  const filteredCount = filteredExperiences.length;
 
   const averageRating =
     totalInterviews === 0
@@ -260,7 +352,7 @@ export default function Company() {
           totalInterviews
         ).toFixed(1);
 
-  const sortedExperiences = [...experiences].sort((a, b) => {
+  const sortedExperiences = [...filteredExperiences].sort((a, b) => {
     const dateA = new Date(a.createdAt).getTime();
     const dateB = new Date(b.createdAt).getTime();
 
@@ -270,6 +362,27 @@ export default function Company() {
     if (sortOption === "ratingLow") return (a.rating || 0) - (b.rating || 0);
     return 0;
   });
+
+  const clearAllFilters = () => {
+    setSearchTerm("");
+    setFilterRole("");
+    setFilterLocation("");
+    setFilterType("");
+    setFilterDifficulty("");
+    setFilterOfferStatus("");
+    setFilterSeason("");
+    setFilterRating("");
+  };
+
+  const activeFiltersCount = [
+    filterRole,
+    filterLocation,
+    filterType,
+    filterDifficulty,
+    filterOfferStatus,
+    filterSeason,
+    filterRating,
+  ].filter(Boolean).length;
 
   if (loading) {
     return (
@@ -396,13 +509,225 @@ export default function Company() {
           </div>
         )}
 
+        {/* Search and Filter Section */}
+        <section className="mt-8 bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
+          {/* Search Bar */}
+          <div className="relative">
+            <svg
+              className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+              />
+            </svg>
+            <input
+              type="text"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              placeholder="Search by role, location, tags, questions, experience..."
+              className="w-full pl-12 pr-4 py-3 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all"
+            />
+          </div>
+
+          {/* Filter Toggle Button */}
+          <div className="mt-4 flex items-center justify-between">
+            <button
+              onClick={() => setShowFilters(!showFilters)}
+              className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-lg transition-colors"
+            >
+              <svg
+                className="w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"
+                />
+              </svg>
+              {showFilters ? "Hide Filters" : "Show Filters"}
+              {activeFiltersCount > 0 && (
+                <span className="inline-flex items-center justify-center w-5 h-5 text-xs font-bold text-white bg-indigo-600 rounded-full">
+                  {activeFiltersCount}
+                </span>
+              )}
+            </button>
+
+            {activeFiltersCount > 0 && (
+              <button
+                onClick={clearAllFilters}
+                className="text-sm font-medium text-indigo-600 hover:text-indigo-700 transition-colors"
+              >
+                Clear all filters
+              </button>
+            )}
+          </div>
+
+          {/* Advanced Filters */}
+          {showFilters && (
+            <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 p-4 bg-slate-50 rounded-xl border border-slate-200">
+              {/* Role */}
+              <div>
+                <label className="block text-xs font-medium text-slate-700 mb-1.5">
+                  Role
+                </label>
+                <select
+                  value={filterRole}
+                  onChange={(e) => setFilterRole(e.target.value)}
+                  className="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                >
+                  <option value="">All Roles</option>
+                  {uniqueRoles.map((role) => (
+                    <option key={role} value={role}>
+                      {role}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Location */}
+              <div>
+                <label className="block text-xs font-medium text-slate-700 mb-1.5">
+                  Location
+                </label>
+                <select
+                  value={filterLocation}
+                  onChange={(e) => setFilterLocation(e.target.value)}
+                  className="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                >
+                  <option value="">All Locations</option>
+                  {uniqueLocations.map((location) => (
+                    <option key={location} value={location}>
+                      {location}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Type */}
+              <div>
+                <label className="block text-xs font-medium text-slate-700 mb-1.5">
+                  Interview Type
+                </label>
+                <select
+                  value={filterType}
+                  onChange={(e) => setFilterType(e.target.value)}
+                  className="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                >
+                  <option value="">All Types</option>
+                  <option value="Internship">Internship</option>
+                  <option value="Full-time">Full-time</option>
+                  <option value="PPO">PPO</option>
+                </select>
+              </div>
+
+              {/* Difficulty */}
+              <div>
+                <label className="block text-xs font-medium text-slate-700 mb-1.5">
+                  Difficulty
+                </label>
+                <select
+                  value={filterDifficulty}
+                  onChange={(e) => setFilterDifficulty(e.target.value)}
+                  className="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                >
+                  <option value="">All Difficulties</option>
+                  <option value="Easy">Easy</option>
+                  <option value="Medium">Medium</option>
+                  <option value="Hard">Hard</option>
+                </select>
+              </div>
+
+              {/* Offer Status */}
+              <div>
+                <label className="block text-xs font-medium text-slate-700 mb-1.5">
+                  Offer Status
+                </label>
+                <select
+                  value={filterOfferStatus}
+                  onChange={(e) => setFilterOfferStatus(e.target.value)}
+                  className="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                >
+                  <option value="">All Statuses</option>
+                  <option value="Offered">Offered</option>
+                  <option value="Rejected">Rejected</option>
+                  <option value="On Hold">On Hold</option>
+                  <option value="In Process">In Process</option>
+                </select>
+              </div>
+
+              {/* Season */}
+              <div>
+                <label className="block text-xs font-medium text-slate-700 mb-1.5">
+                  Season
+                </label>
+                <select
+                  value={filterSeason}
+                  onChange={(e) => setFilterSeason(e.target.value)}
+                  className="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                >
+                  <option value="">All Seasons</option>
+                  {uniqueSeasons.map((season) => (
+                    <option key={season} value={season}>
+                      {season}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Rating */}
+              <div>
+                <label className="block text-xs font-medium text-slate-700 mb-1.5">
+                  Minimum Rating
+                </label>
+                <select
+                  value={filterRating}
+                  onChange={(e) => setFilterRating(e.target.value)}
+                  className="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                >
+                  <option value="">Any Rating</option>
+                  <option value="1">1+ Stars</option>
+                  <option value="2">2+ Stars</option>
+                  <option value="3">3+ Stars</option>
+                  <option value="4">4+ Stars</option>
+                  <option value="5">5 Stars</option>
+                </select>
+              </div>
+            </div>
+          )}
+
+          {/* Results Summary */}
+          {(searchTerm || activeFiltersCount > 0) && (
+            <div className="mt-4 text-sm text-slate-600">
+              Showing{" "}
+              <span className="font-semibold text-slate-900">
+                {filteredCount}
+              </span>{" "}
+              of{" "}
+              <span className="font-semibold text-slate-900">
+                {totalInterviews}
+              </span>{" "}
+              experiences
+            </div>
+          )}
+        </section>
+
         {/* Experiences list */}
-        <section className="mt-10">
+        <section className="mt-8">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5">
             <h2 className="text-xl sm:text-2xl font-semibold text-slate-900">
-              Shared experiences
+              Interview Experiences
               <span className="ml-2 text-sm text-slate-500">
-                ({totalInterviews})
+                ({filteredCount})
               </span>
             </h2>
 
@@ -427,19 +752,32 @@ export default function Company() {
             </div>
           </div>
 
-          {totalInterviews === 0 ? (
+          {filteredCount === 0 ? (
             <div className="bg-white border-2 border-dashed border-slate-300 rounded-2xl px-8 py-12 text-center shadow-inner">
+              <svg
+                className="w-16 h-16 mx-auto mb-4 text-slate-300"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={1.5}
+                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                />
+              </svg>
               <p className="text-sm sm:text-base font-medium text-slate-700 mb-2">
-                No experiences shared for {companyName} yet.
+                No experiences found matching your search
               </p>
               <p className="text-xs sm:text-sm text-slate-500 mb-4">
-                Be the first to share your interview experience and help others.
+                Try adjusting your filters or search terms
               </p>
               <button
-                onClick={() => navigate("/share-experience")}
+                onClick={clearAllFilters}
                 className="inline-flex items-center gap-2 px-4 py-2 text-xs sm:text-sm font-medium rounded-lg bg-indigo-50 text-indigo-700 hover:bg-indigo-100 border border-indigo-200 transition-colors"
               >
-                Share experience
+                Clear all filters
               </button>
             </div>
           ) : (

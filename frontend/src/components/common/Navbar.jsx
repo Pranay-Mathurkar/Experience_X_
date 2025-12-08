@@ -1,7 +1,5 @@
-
-
 import React, { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 
 export function Navbar() {
@@ -9,9 +7,8 @@ export function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const navigate = useNavigate();
-  const { user, handleLogout } = useAuth(); // ✅ REAL AUTH STATE
+  const { user, handleLogout } = useAuth();
 
-  // ✅ TRUE ONLY IF USER EXISTS
   const isLoggedIn = !!user;
 
   useEffect(() => {
@@ -26,6 +23,16 @@ export function Navbar() {
     { name: "Share Experience", href: "/share-experience" },
   ];
 
+  const handleNavClick = (href) => {
+    navigate(href);
+    setIsMobileMenuOpen(false);
+  };
+
+  const handleLogoutClick = () => {
+    handleLogout();
+    setIsMobileMenuOpen(false);
+  };
+
   return (
     <>
       <nav
@@ -37,31 +44,33 @@ export function Navbar() {
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-8">
           <div className="flex justify-between items-center">
-            {/* ✅ LOGO */}
-            <div
+            {/* Logo */}
+            <button
+              type="button"
               className="flex items-center gap-3 cursor-pointer group"
               onClick={() => navigate("/")}
             >
               <span className="text-xl font-bold tracking-tight text-slate-800">
                 Interview<span className="text-purple-600">Archive</span>
               </span>
-            </div>
+            </button>
 
-            {/* ✅ DESKTOP NAV */}
+            {/* Desktop nav */}
             <div className="hidden md:flex items-center gap-8">
               {navLinks.map((link) => (
-                <a
+                <button
                   key={link.name}
-                  href={link.href}
+                  type="button"
+                  onClick={() => navigate(link.href)}
                   className="text-sm font-medium text-slate-600 hover:text-purple-600"
                 >
                   {link.name}
-                </a>
+                </button>
               ))}
 
-              {/* ✅ ✅ CHAT BUTTON (ONLY FOR LOGGED-IN USERS) */}
               {isLoggedIn && (
                 <button
+                  type="button"
                   onClick={() => navigate("/chat")}
                   className="text-sm font-semibold text-indigo-600 hover:text-indigo-800"
                 >
@@ -70,11 +79,12 @@ export function Navbar() {
               )}
             </div>
 
-            {/* ✅ AUTH BUTTONS */}
+            {/* Desktop auth */}
             <div className="hidden md:flex items-center gap-4">
               {!isLoggedIn ? (
                 <>
                   <button
+                    type="button"
                     onClick={() => navigate("/login")}
                     className="px-5 py-2 text-sm font-semibold text-slate-600"
                   >
@@ -82,10 +92,11 @@ export function Navbar() {
                   </button>
 
                   <button
+                    type="button"
                     onClick={() => navigate("/signup")}
                     className="px-6 py-2.5 text-sm font-semibold text-white bg-slate-900 rounded-full"
                   >
-                    Sign Up
+                    Sign up
                   </button>
                 </>
               ) : (
@@ -95,7 +106,8 @@ export function Navbar() {
                   </span>
 
                   <button
-                    onClick={handleLogout} // ✅ REAL LOGOUT
+                    type="button"
+                    onClick={handleLogoutClick}
                     className="px-6 py-2.5 text-sm font-semibold text-white bg-red-500 rounded-full"
                   >
                     Logout
@@ -104,38 +116,39 @@ export function Navbar() {
               )}
             </div>
 
-            {/* ✅ MOBILE TOGGLE */}
+            {/* Mobile toggle */}
             <div className="md:hidden">
-              <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
+              <button
+                type="button"
+                onClick={() => setIsMobileMenuOpen((v) => !v)}
+                className="text-2xl"
+                aria-label="Toggle navigation menu"
+              >
                 ☰
               </button>
             </div>
           </div>
         </div>
 
-        {/* ✅ MOBILE MENU */}
+        {/* Mobile menu */}
         {isMobileMenuOpen && (
           <div className="md:hidden bg-white border-t px-6 py-4 space-y-4">
             {navLinks.map((link) => (
               <button
                 key={link.name}
-                onClick={() => {
-                  navigate(link.href);
-                  setIsMobileMenuOpen(false);
-                }}
+                type="button"
+                onClick={() => handleNavClick(link.href)}
+                className="block w-full text-left text-sm font-medium text-slate-700 py-1"
               >
                 {link.name}
               </button>
             ))}
 
-            {/* ✅ ✅ MOBILE CHAT BUTTON */}
             {isLoggedIn && (
               <button
-                onClick={() => {
-                  navigate("/chat");
-                  setIsMobileMenuOpen(false);
-                }}
-                className="block w-full text-left font-semibold text-indigo-600"
+                type="button"
+                onClick={() => handleNavClick("/chat")}
+                className="block w-full text-left text-sm font-semibold text-indigo-600 py-1"
               >
                 💬 Chats
               </button>
@@ -143,15 +156,30 @@ export function Navbar() {
 
             {!isLoggedIn ? (
               <>
-                <button onClick={() => navigate("/login")}>Log in</button>
-                <button onClick={() => navigate("/signup")}>Sign up</button>
+                <button
+                  type="button"
+                  onClick={() => handleNavClick("/login")}
+                  className="block w-full text-left text-sm font-medium text-slate-700 py-1"
+                >
+                  Log in
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleNavClick("/signup")}
+                  className="block w-full text-left text-sm font-medium text-slate-700 py-1"
+                >
+                  Sign up
+                </button>
               </>
             ) : (
               <>
-                <p className="font-semibold">Hi, {user?.name}</p>
+                <p className="text-sm font-semibold text-slate-700">
+                  Hi, {user?.name}
+                </p>
                 <button
-                  onClick={handleLogout}
-                  className="w-full py-2 text-white bg-red-500 rounded"
+                  type="button"
+                  onClick={handleLogoutClick}
+                  className="w-full py-2 text-sm font-semibold text-white bg-red-500 rounded"
                 >
                   Logout
                 </button>
@@ -161,6 +189,7 @@ export function Navbar() {
         )}
       </nav>
 
+      {/* Spacer to offset fixed navbar */}
       <div className="h-20" />
     </>
   );

@@ -1,14 +1,14 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import exLogo from "../assets/experience-x-logo.png";
 import { useAuth } from "../contexts/AuthContext";
-import { useNavigate } from "react-router-dom";
 
 const initialRound = { roundType: "", mode: "", difficulty: "", questions: "" };
 
-export default function ShareExperiencePage() {
+export default function EditExperiencePage() {
+  const { id } = useParams();
   const { user } = useAuth();
   const token = localStorage.getItem("token");
-
   const navigate = useNavigate();
 
   const [form, setForm] = useState({
@@ -26,13 +26,12 @@ export default function ShareExperiencePage() {
     mainExperience: "",
     tips: "",
     rounds: [initialRound],
-    rating: "", // 👈 added
   });
 
+  const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
 
-  // all fields required for this form
   const isFormValid =
     form.company.trim() !== "" &&
     form.role.trim() !== "" &&
@@ -47,7 +46,6 @@ export default function ShareExperiencePage() {
     form.stocks.trim() !== "" &&
     form.mainExperience.trim() !== "" &&
     form.tips.trim() !== "" &&
-    form.rating.trim() !== "" && // 👈 rating required
     form.rounds.every(
       (r) =>
         r.roundType.trim() !== "" &&
@@ -55,6 +53,55 @@ export default function ShareExperiencePage() {
         r.difficulty.trim() !== "" &&
         r.questions.trim() !== ""
     );
+
+  // Load existing experience
+  useEffect(() => {
+    const fetchExperience = async () => {
+      if (!user || !token) {
+        navigate("/login");
+        return;
+      }
+
+      try {
+        setLoading(true);
+        setError("");
+
+        const res = await fetch(
+          `http://localhost:3000/api/share-experience/${id}`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+
+        if (!res.ok) throw new Error("Failed to load experience");
+
+        const data = await res.json();
+
+        setForm({
+          company: data.company || "",
+          role: data.role || "",
+          location: data.location || "",
+          season: data.season || "",
+          interviewType: data.interviewType || "Internship",
+          offerStatus: data.offerStatus || "Offered",
+          overallDifficulty: data.overallDifficulty || "Medium",
+          tags: (data.tags || []).join(", "),
+          stipend: data.stipend || "",
+          baseSalary: data.baseSalary || "",
+          stocks: data.stocks || "",
+          mainExperience: data.mainExperience || "",
+          tips: data.tips || "",
+          rounds: data.rounds && data.rounds.length > 0 ? data.rounds : [initialRound],
+        });
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchExperience();
+  }, [id, token, user, navigate]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -84,7 +131,6 @@ export default function ShareExperiencePage() {
   const handleSubmit = async () => {
     setError("");
 
-    // backend-safe guard
     if (!isFormValid) {
       setError("Please fill all required fields.");
       return;
@@ -99,59 +145,55 @@ export default function ShareExperiencePage() {
     try {
       setSubmitting(true);
 
-      const res = await fetch("http://localhost:3000/api/share-experience", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          ...form,
-          tags: form.tags
-            .split(",")
-            .map((t) => t.trim())
-            .filter(Boolean),
-        }),
-      });
+      const res = await fetch(
+        `http://localhost:3000/api/share-experience/${id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            ...form,
+            tags: form.tags
+              .split(",")
+              .map((t) => t.trim())
+              .filter(Boolean),
+          }),
+        }
+      );
 
-      if (!res.ok) throw new Error("Failed to submit");
+      if (!res.ok) throw new Error("Failed to update");
 
       setSubmitting(false);
-
       navigate(`/company/${form.company}`);
-
-      setForm({
-        company: "",
-        role: "",
-        location: "",
-        season: "",
-        interviewType: "Internship",
-        offerStatus: "Offered",
-        overallDifficulty: "Medium",
-        tags: "",
-        stipend: "",
-        baseSalary: "",
-        stocks: "",
-        mainExperience: "",
-        tips: "",
-        rounds: [initialRound],
-        rating: "", // 👈 reset
-      });
     } catch (err) {
       setSubmitting(false);
       setError(err.message);
     }
   };
 
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-indigo-50 to-slate-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-16 h-16 border-4 border-indigo-200 border-t-indigo-600 rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-xl font-semibold text-slate-700">Loading Experience</p>
+          <p className="text-sm text-slate-500 mt-2">Please wait...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-slate-50 py-12 px-4 sm:px-6">
       <div className="max-w-4xl mx-auto">
         <button
-          onClick={() => navigate("/home")}
+          onClick={() => navigate("/account")}
           className="group flex items-center text-slate-500 mb-8 hover:text-purple-600 transition"
         >
           <span className="mr-2 text-xl group-hover:-translate-x-1 transition">←</span>
-          Back to Home
+          Back to My Account
         </button>
 
         {/* Card */}
@@ -162,20 +204,20 @@ export default function ShareExperiencePage() {
               <div className="relative z-10 flex-1 max-w-3xl">
                 <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/90 text-[11px] font-bold uppercase tracking-wider text-purple-600 mb-4">
                   <span className="w-2 h-2 rounded-full bg-purple-600" />
-                  SHARE & HELP OTHERS
+                  EDIT EXPERIENCE
                 </div>
 
                 <h1 className="text-3xl md:text-5xl font-black text-gray-900 leading-tight mb-3">
-                  Share Your Interview Experience
+                  Update Your Interview Experience
                 </h1>
 
                 <p className="text-slate-600 text-base leading-relaxed">
-                  Add details about rounds, questions, and your preparation journey so other
-                  candidates can learn from your experience. Your submission stays anonymous.
+                  Edit the details of your experience. Changes will update the public view
+                  for other candidates.
                 </p>
               </div>
 
-              {/* Logo - Centered vertically on the right */}
+              {/* Logo */}
               <div className="relative z-10 flex items-center justify-center shrink-0 self-center">
                 <div className="w-28 h-28 md:w-36 md:h-36 flex items-center justify-center">
                   <img
@@ -198,14 +240,16 @@ export default function ShareExperiencePage() {
           <div className="space-y-8">
             {/* ---------------- BASIC DETAILS ---------------- */}
             <section className="space-y-4">
-              <h2 className="text-xl font-semibold text-slate-900">Basic Details *</h2>
-              <p className="text-xs text-slate-500">All fields are required.</p>
+              <h2 className="text-xl font-semibold text-slate-900">
+                Basic Details *
+              </h2>
+              <p className="text-xs text-slate-500">
+                All fields are required.
+              </p>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label className="block text-sm font-semibold text-slate-700 mb-2">
-                    Company *
-                  </label>
+                  <label className="block text-sm font-semibold text-slate-700 mb-2">Company *</label>
                   <input
                     name="company"
                     value={form.company}
@@ -217,9 +261,7 @@ export default function ShareExperiencePage() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-slate-700 mb-2">
-                    Role / Position *
-                  </label>
+                  <label className="block text-sm font-semibold text-slate-700 mb-2">Role / Position *</label>
                   <input
                     name="role"
                     value={form.role}
@@ -231,9 +273,7 @@ export default function ShareExperiencePage() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-slate-700 mb-2">
-                    Location *
-                  </label>
+                  <label className="block text-sm font-semibold text-slate-700 mb-2">Location *</label>
                   <input
                     name="location"
                     value={form.location}
@@ -245,9 +285,7 @@ export default function ShareExperiencePage() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-slate-700 mb-2">
-                    Season / Year *
-                  </label>
+                  <label className="block text-sm font-semibold text-slate-700 mb-2">Season / Year *</label>
                   <input
                     name="season"
                     value={form.season}
@@ -259,13 +297,11 @@ export default function ShareExperiencePage() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-slate-700 mb-2">
-                    Interview Type *
-                  </label>
-                  <select
-                    name="interviewType"
-                    value={form.interviewType}
-                    onChange={handleChange}
+                  <label className="block text-sm font-semibold text-slate-700 mb-2">Interview Type *</label>
+                  <select 
+                    name="interviewType" 
+                    value={form.interviewType} 
+                    onChange={handleChange} 
                     required
                     className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 focus:outline-none focus:bg-white focus:border-purple-500 focus:ring-2 focus:ring-purple-100 transition-all appearance-none cursor-pointer"
                   >
@@ -277,13 +313,11 @@ export default function ShareExperiencePage() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-slate-700 mb-2">
-                    Offer Status *
-                  </label>
-                  <select
-                    name="offerStatus"
-                    value={form.offerStatus}
-                    onChange={handleChange}
+                  <label className="block text-sm font-semibold text-slate-700 mb-2">Offer Status *</label>
+                  <select 
+                    name="offerStatus" 
+                    value={form.offerStatus} 
+                    onChange={handleChange} 
                     required
                     className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 focus:outline-none focus:bg-white focus:border-purple-500 focus:ring-2 focus:ring-purple-100 transition-all appearance-none cursor-pointer"
                   >
@@ -296,13 +330,11 @@ export default function ShareExperiencePage() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-slate-700 mb-2">
-                    Overall Difficulty *
-                  </label>
-                  <select
-                    name="overallDifficulty"
-                    value={form.overallDifficulty}
-                    onChange={handleChange}
+                  <label className="block text-sm font-semibold text-slate-700 mb-2">Overall Difficulty *</label>
+                  <select 
+                    name="overallDifficulty" 
+                    value={form.overallDifficulty} 
+                    onChange={handleChange} 
                     required
                     className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 focus:outline-none focus:bg-white focus:border-purple-500 focus:ring-2 focus:ring-purple-100 transition-all appearance-none cursor-pointer"
                   >
@@ -313,31 +345,8 @@ export default function ShareExperiencePage() {
                   </select>
                 </div>
 
-                {/* Rating */}
-                <div>
-                  <label className="block text-sm font-semibold text-slate-700 mb-2">
-                    Overall Rating (1–5) *
-                  </label>
-                  <select
-                    name="rating"
-                    value={form.rating}
-                    onChange={handleChange}
-                    required
-                    className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 focus:outline-none focus:bg-white focus:border-purple-500 focus:ring-2 focus:ring-purple-100 transition-all appearance-none cursor-pointer"
-                  >
-                    <option value="">Select rating</option>
-                    <option value="1">1 - Very poor</option>
-                    <option value="2">2 - Below average</option>
-                    <option value="3">3 - Average</option>
-                    <option value="4">4 - Good</option>
-                    <option value="5">5 - Excellent</option>
-                  </select>
-                </div>
-
                 <div className="md:col-span-2">
-                  <label className="block text-sm font-semibold text-slate-700 mb-2">
-                    Tags (comma-separated) *
-                  </label>
+                  <label className="block text-sm font-semibold text-slate-700 mb-2">Tags (comma-separated) *</label>
                   <input
                     name="tags"
                     value={form.tags}
@@ -368,16 +377,13 @@ export default function ShareExperiencePage() {
 
               <div className="space-y-4">
                 {form.rounds.map((round, index) => (
-                  <div
-                    key={index}
-                    className="border border-slate-200 bg-slate-50/50 p-5 rounded-xl shadow-sm"
-                  >
+                  <div key={index} className="border border-slate-200 bg-slate-50/50 p-5 rounded-xl shadow-sm">
                     <div className="flex justify-between items-center mb-4">
                       <h3 className="font-semibold text-slate-900">Round {index + 1}</h3>
                       {form.rounds.length > 1 && (
-                        <button
-                          type="button"
-                          onClick={() => removeRound(index)}
+                        <button 
+                          type="button" 
+                          onClick={() => removeRound(index)} 
                           className="text-xs text-red-500 hover:text-red-600 font-medium px-3 py-1.5 rounded-lg border border-red-200 bg-red-50 hover:bg-red-100 transition-all"
                         >
                           Remove Round
@@ -387,9 +393,7 @@ export default function ShareExperiencePage() {
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
                       <div>
-                        <label className="block text-xs font-medium text-slate-600 mb-1.5">
-                          Round Type *
-                        </label>
+                        <label className="block text-xs font-medium text-slate-600 mb-1.5">Round Type *</label>
                         <input
                           name="roundType"
                           value={round.roundType}
@@ -401,9 +405,7 @@ export default function ShareExperiencePage() {
                       </div>
 
                       <div>
-                        <label className="block text-xs font-medium text-slate-600 mb-1.5">
-                          Mode *
-                        </label>
+                        <label className="block text-xs font-medium text-slate-600 mb-1.5">Mode *</label>
                         <input
                           name="mode"
                           value={round.mode}
@@ -415,9 +417,7 @@ export default function ShareExperiencePage() {
                       </div>
 
                       <div>
-                        <label className="block text-xs font-medium text-slate-600 mb-1.5">
-                          Difficulty *
-                        </label>
+                        <label className="block text-xs font-medium text-slate-600 mb-1.5">Difficulty *</label>
                         <select
                           name="difficulty"
                           value={round.difficulty}
@@ -434,9 +434,7 @@ export default function ShareExperiencePage() {
                     </div>
 
                     <div>
-                      <label className="block text-xs font-medium text-slate-600 mb-1.5">
-                        Questions / Topics Covered *
-                      </label>
+                      <label className="block text-xs font-medium text-slate-600 mb-1.5">Questions / Topics Covered *</label>
                       <textarea
                         name="questions"
                         value={round.questions}
@@ -461,9 +459,7 @@ export default function ShareExperiencePage() {
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div>
-                  <label className="block text-sm font-semibold text-slate-700 mb-2">
-                    Stipend (Monthly) *
-                  </label>
+                  <label className="block text-sm font-semibold text-slate-700 mb-2">Stipend (Monthly) *</label>
                   <input
                     name="stipend"
                     value={form.stipend}
@@ -475,9 +471,7 @@ export default function ShareExperiencePage() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-slate-700 mb-2">
-                    Base Salary (Annual) *
-                  </label>
+                  <label className="block text-sm font-semibold text-slate-700 mb-2">Base Salary (Annual) *</label>
                   <input
                     name="baseSalary"
                     value={form.baseSalary}
@@ -489,9 +483,7 @@ export default function ShareExperiencePage() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-slate-700 mb-2">
-                    Stocks / Bonus *
-                  </label>
+                  <label className="block text-sm font-semibold text-slate-700 mb-2">Stocks / Bonus *</label>
                   <input
                     name="stocks"
                     value={form.stocks}
@@ -512,9 +504,7 @@ export default function ShareExperiencePage() {
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-slate-700 mb-2">
-                  Main Experience / Story *
-                </label>
+                <label className="block text-sm font-semibold text-slate-700 mb-2">Main Experience / Story *</label>
                 <textarea
                   name="mainExperience"
                   value={form.mainExperience}
@@ -527,9 +517,7 @@ export default function ShareExperiencePage() {
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-slate-700 mb-2">
-                  Tips for Future Candidates *
-                </label>
+                <label className="block text-sm font-semibold text-slate-700 mb-2">Tips for Future Candidates *</label>
                 <textarea
                   name="tips"
                   value={form.tips}
@@ -554,11 +542,10 @@ export default function ShareExperiencePage() {
                       : "bg-gradient-to-r from-purple-600 to-indigo-600 hover:shadow-purple-500/50 hover:-translate-y-0.5 active:scale-[0.98]"
                   }`}
               >
-                {submitting ? "Submitting Your Experience..." : "Submit Experience"}
+                {submitting ? "Updating Experience..." : "Save Changes"}
               </button>
               <p className="text-xs text-slate-500 text-center mt-3">
-                By submitting, you agree that your post may be shown publicly in an anonymous form
-                to help other candidates.
+                Your changes will be reflected publicly for other candidates to view.
               </p>
             </div>
           </div>

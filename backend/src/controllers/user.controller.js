@@ -184,7 +184,8 @@ const createInterviewExperience = async (req, res) => {
       mainExperience,
       tips,
       rounds,
-      codingLinks,
+      rating
+     
     } = req.body;
 
     if (!company || !role || !mainExperience) {
@@ -212,7 +213,8 @@ const createInterviewExperience = async (req, res) => {
       mainExperience,
       tips,
       rounds,
-      codingLinks,
+      rating
+     
     });
 
     // ✅✅✅ FIND ALL FOLLOWERS OF THIS COMPANY

@@ -8,6 +8,8 @@ import { AuthProvider } from "./contexts/AuthContext";
 import Company from "./pages/company";
 import ExperienceDetail from "./pages/detail";
 import MyAccount from "./pages/myaccount";
+import EditExperiencePage from "./pages/EditExperiencePage";
+
 import { GoogleOAuthProvider } from "@react-oauth/google";
 
 export default function App() {
@@ -16,6 +18,7 @@ export default function App() {
       <BrowserRouter>
         <AuthProvider>
           <Routes>
+         <Route path="/edit/:id" element={<EditExperiencePage />} />
             <Route path="/home" element={<MainPage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/share-experience" element={<ShareExperienceForm />} />

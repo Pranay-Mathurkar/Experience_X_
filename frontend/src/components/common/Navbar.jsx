@@ -179,7 +179,7 @@ export function Navbar() {
               onClick={() => navigate("/")}
             >
               <span className="text-xl font-bold tracking-tight text-slate-800">
-                Interview<span className="text-purple-600">Archive</span>
+                Experience<span className="text-purple-600">_X</span>
               </span>
             </div>
 
@@ -201,7 +201,7 @@ export function Navbar() {
                   onClick={() => navigate("/chat")}
                   className="text-sm font-semibold text-indigo-600 hover:text-indigo-800"
                 >
-                  💬 Chats
+                  Chats
                 </button>
               )}
             </div>
@@ -273,7 +273,7 @@ export function Navbar() {
                 }}
                 className="block w-full text-left font-semibold text-indigo-600"
               >
-                💬 Chats
+                 Chats
               </button>
             )}
 

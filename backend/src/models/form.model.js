@@ -18,7 +18,7 @@ const FormSchema = new Schema(
       ref: "User",
     },
 
-    // Basic details (all required in frontend)
+  
     company: { type: String, required: true },
     role: { type: String, required: true },
     location: { type: String, required: true },
@@ -45,7 +45,7 @@ const FormSchema = new Schema(
       default: "Medium",
     },
 
-    // New rating field (1–5 as string or number)
+  
     rating: {
       type: Number,
       min: 1,
@@ -65,7 +65,7 @@ const FormSchema = new Schema(
     mainExperience: { type: String, required: true },
     tips: { type: String, required: true },
 
-    // Rounds (all fields required above)
+
     rounds: {
       type: [roundSchema],
       validate: {

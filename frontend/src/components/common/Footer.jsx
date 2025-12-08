@@ -9,8 +9,7 @@ export function Footer() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-12 mb-16">
-          
-          {/* Brand Section */}
+        
           <div className="lg:col-span-5 space-y-6">
             <Link to="/" className="flex items-center gap-2.5 cursor-pointer w-fit">
               <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-br from-purple-600 to-indigo-600 text-white shadow-lg shadow-purple-900/20">
@@ -47,7 +46,7 @@ export function Footer() {
             </div>
           </div>
 
-          {/* Links Section */}
+        
           <div className="lg:col-span-3 md:col-span-1">
             <h3 className="text-white font-semibold mb-6 tracking-wide text-sm uppercase">Explore</h3>
             <ul className="space-y-4">
@@ -66,7 +65,7 @@ export function Footer() {
             </ul>
           </div>
 
-          {/* Newsletter Section */}
+         
           <div className="lg:col-span-4 md:col-span-1">
             <h3 className="text-white font-semibold mb-6 tracking-wide text-sm uppercase">Stay Updated</h3>
             <p className="text-sm text-slate-400 mb-4">

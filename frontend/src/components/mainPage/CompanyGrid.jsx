@@ -759,7 +759,7 @@ import { useNavigate } from "react-router-dom";
 
 export function CompanyGrid({ search }) {
   const navigate = useNavigate();
-  const API = "http://localhost:3000/api";
+  const API = "https://experience-9t2k.onrender.com/api";
 
   const [companies, setCompanies] = useState([]);
   const [trending, setTrending] = useState([]);

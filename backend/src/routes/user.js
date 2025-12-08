@@ -15,6 +15,14 @@ import {
   toggleFollowCompany,  
 } from "../controllers/user.controller.js";
 
+
+
+import {
+  sendMessage,
+  getMyChats,
+  getMessages,
+} from "../controllers/chat.controller.js";
+
 import { authMiddleware } from "../middlewares/auth.middleware.js";
 
 const router = Router();
@@ -52,7 +60,9 @@ router.post("/follow-company",authMiddleware,toggleFollowCompany);
 
 
 
-
+router.post("/send", authMiddleware, sendMessage);
+router.get("/my-chats", authMiddleware, getMyChats);
+router.get("/messages/:userId", authMiddleware, getMessages);
 
 
 

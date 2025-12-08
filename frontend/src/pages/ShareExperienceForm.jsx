@@ -34,8 +34,6 @@ export default function ShareExperiencePage() {
 
   const [codingLinks, setCodingLinks] = useState([{ platform: "", url: "" }]);
 
-  // ---------------- HANDLERS ----------------
-
   const handleChange = (e) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));

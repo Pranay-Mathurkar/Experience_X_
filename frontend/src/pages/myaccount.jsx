@@ -254,20 +254,69 @@ export default function MyAccount() {
                 <p className="text-sm text-slate-500 mt-1">Manage your professional experiences</p>
               </div>
             </div>
-            <button
-              onClick={handleLogout}
-              className="flex items-center gap-2 px-5 py-2.5 bg-slate-100 text-slate-700 rounded-xl hover:bg-slate-200 transition-all duration-200 text-sm font-medium shadow-sm hover:shadow"
-            >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
-                />
-              </svg>
-              Logout
-            </button>
+         <div className="flex items-center gap-3">
+  {/* Logout button */}
+  <button
+    onClick={handleLogout}
+    className="flex items-center gap-2 px-5 py-2.5 bg-slate-100 text-slate-700 rounded-xl hover:bg-slate-200 transition-all duration-200 text-sm font-medium shadow-sm hover:shadow"
+  >
+    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth={2}
+        d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+      />
+    </svg>
+    Logout
+  </button>
+
+
+
+  {/* Icon-only dropdown menu */}
+  <div className="relative">
+    <details className="group">
+      <summary className="list-none flex items-center justify-center w-9 h-9 rounded-lg
+ bg-white/70 border border-slate-200 shadow-sm hover:bg-slate-50 cursor-pointer">
+        <svg
+          className="w-4 h-4 text-slate-500 group-open:rotate-90 transition-transform"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M5 12h14M5 6h10M5 18h6"
+          />
+        </svg>
+      </summary>
+
+      <div className="absolute right-0 mt-2 w-44 bg-white border border-slate-200 rounded-xl shadow-lg py-1 z-50">
+        <button
+          onClick={() => navigate("/share-experience")}
+          className="w-full text-left px-4 py-2 text-sm text-slate-700 hover:bg-slate-50"
+        >
+          Share Experience
+        </button>
+        <button
+          onClick={() => navigate("/about")}
+          className="w-full text-left px-4 py-2 text-sm text-slate-700 hover:bg-slate-50"
+        >
+          About Us
+        </button>
+        <button
+          onClick={() => navigate("/chat")}
+          className="w-full text-left px-4 py-2 text-sm text-slate-700 hover:bg-slate-50"
+        >
+          Chat
+        </button>
+      </div>
+    </details>
+  </div>
+</div>
+
           </div>
         </div>
       </div>

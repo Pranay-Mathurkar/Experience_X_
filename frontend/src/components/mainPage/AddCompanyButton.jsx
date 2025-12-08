@@ -5,13 +5,12 @@ export function AddCompanyButton() {
   const navigate = useNavigate();
 
   const handleAddReview = () => {
-    const token = localStorage.getItem("token"); // ✅ proper login check
+    const token = localStorage.getItem("token"); 
 
     if (!token) {
-      navigate("/login"); // ✅ redirect if NOT logged in
+      navigate("/login"); 
     } else {
-      navigate("/share-experience"); // ✅ go to share page if logged in
-    }
+      navigate("/share-experience"); 
   };
 
   return (

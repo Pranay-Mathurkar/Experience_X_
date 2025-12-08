@@ -1,37 +1,25 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import axios from "axios";
 
-export function SearchBar() {
+export function SearchBar({ setSearch }) {
   const [isFocused, setIsFocused] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
-  const [error, setError] = useState(""); 
-  const navigate = useNavigate();
 
-  const API = "http://localhost:3000/api"; // Ensure this matches your backend port
+  // Live Filter Handler
+  const handleLiveSearch = (value) => {
+    setSearchTerm(value);
 
-  const handleSearch = async () => {
-    const company = searchTerm.toLowerCase().trim();
-    if (!company) return;
-
-    try {
-      setError("");
-      
-      // Check if company has any experience
-      const res = await axios.get(`${API}/company/${company}`);
-
-      if (res.data.data.length > 0) {
-        // Only navigate if experience exists
-        navigate(`/company/${company}`);
-      } else {
-        // Stay on home + show message
-        setError(`❌ No experience added yet for "${company}"`);
-      }
-    } catch (err) {
-      console.error(err);
-      // Fallback: If backend fails or 404, usually means no data
-      setError(`⚠️ No experience found for "${company}"`);
+    // If empty -> clear filter, else -> filter grid
+    if (!value.trim()) {
+      setSearch(""); 
+    } else {
+      setSearch(value.toLowerCase().trim());
     }
+  };
+
+  // Manual Trigger (Button/Enter)
+  const handleSearch = () => {
+    const company = searchTerm.toLowerCase().trim();
+    setSearch(company);
   };
 
   return (
@@ -67,7 +55,7 @@ export function SearchBar() {
             className="w-full pl-16 pr-32 py-4 text-lg text-slate-700 bg-white rounded-full border border-slate-200 shadow-xl placeholder:text-slate-400 focus:outline-none focus:border-purple-300 focus:ring-4 focus:ring-purple-100 transition-all duration-300"
             placeholder="Search company reviews..."
             value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
+            onChange={(e) => handleLiveSearch(e.target.value)}
             onFocus={() => setIsFocused(true)}
             onBlur={() => setIsFocused(false)}
             onKeyDown={(e) => e.key === "Enter" && handleSearch()}
@@ -88,22 +76,16 @@ export function SearchBar() {
           </div>
         </div>
 
-        {/* Error Message */}
-        {error && (
-          <div className="absolute top-full left-0 right-0 mt-3 text-center">
-            <span className="inline-block px-4 py-1.5 bg-red-50 text-red-600 text-sm font-semibold rounded-full border border-red-100 animate-pulse">
-              {error}
-            </span>
-          </div>
-        )}
-
-        {/* Trending Links */}
+        {/* Trending Quick Filters */}
         <div className="mt-6 flex flex-wrap justify-center gap-2 text-sm text-slate-500">
           <span>Trending:</span>
           {["Google", "Microsoft", "Amazon", "Adobe"].map((company) => (
             <span
               key={company}
-              onClick={() => { setSearchTerm(company); handleSearch(); }}
+              onClick={() => {
+                setSearchTerm(company);
+                setSearch(company.toLowerCase());
+              }}
               className="cursor-pointer hover:text-purple-600 hover:underline transition-colors font-medium"
             >
               {company}

@@ -4,11 +4,13 @@ import { SearchBar } from "../components/common/SearchBar";
 
 import { CompanyGrid } from "../components/mainPage/CompanyGrid";
 import { AddCompanyButton } from "../components/mainPage/AddCompanyButton";
-
+import { useState } from "react";
 
 import { Footer } from "../components/common/Footer";
 
 export default function MainPage() {
+  const [search, setSearch] = useState(""); // ✅ GLOBAL SEARCH
+
   return (
     <div className="min-h-screen bg-slate-50 font-sans selection:bg-purple-100 selection:text-purple-900 overflow-x-hidden relative">
       <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">

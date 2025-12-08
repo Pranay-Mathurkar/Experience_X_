@@ -1,8 +1,11 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import { Navbar } from "../components/common/Navbar";
 import { Footer } from "../components/common/Footer";
 
 export default function AboutPage() {
+  const navigate = useNavigate();
+
   return (
     <div className="min-h-screen w-full bg-white flex flex-col">
       <Navbar />
@@ -130,7 +133,7 @@ export default function AboutPage() {
               </p>
             </div>
             <button
-              onClick={() => (window.location.href = "/")} // or open your ShareExperienceForm
+              onClick={() => navigate("/share-experience")}
               className="inline-flex items-center justify-center px-5 py-2.5 rounded-full bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium shadow-md"
             >
               Share your experience

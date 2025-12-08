@@ -96,7 +96,7 @@ export default function ShareExperiencePage() {
     try {
       setSubmitting(true);
 
-      const res = await fetch("http://localhost:3000/api/share-experience", {
+      const res = await fetch("https://experience-9t2k.onrender.com/api/share-experience", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

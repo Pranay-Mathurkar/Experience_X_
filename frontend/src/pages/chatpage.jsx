@@ -814,7 +814,12 @@ import { io } from "socket.io-client";
 import { useAuth } from "../contexts/AuthContext";
 
 // socket instance
-const socket = io("http://localhost:3000", { autoConnect: false });
+const socket = io("https://experience-9t2k.onrender.com", {
+  autoConnect: false,
+  transports: ["websocket"],
+  withCredentials: true,
+});
+
 
 // Avatar
 const Avatar = ({ name }) => (
@@ -921,7 +926,7 @@ export default function ChatPage() {
     if (!token || !myId) return;
 
     axios
-      .get("http://localhost:3000/api/chat/my-chats", {
+      .get("https://experience-9t2k.onrender.com/api/chat/my-chats", {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((res) => setChats(Array.isArray(res.data) ? res.data : []))
@@ -941,7 +946,7 @@ export default function ChatPage() {
     }
 
     axios
-      .get(`http://localhost:3000/api/chat/messages/${activeUserId}`, {
+      .get(`https://experience-9t2k.onrender.com/api/chat/messages/${activeUserId}`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((res) => setMessages(Array.isArray(res.data) ? res.data : []))
@@ -960,7 +965,7 @@ export default function ChatPage() {
       setActiveUser(other || null);
     } else {
       axios
-        .get(`http://localhost:3000/api/users/${activeUserId}`, {
+        .get(`https://experience-9t2k.onrender.com/api/users/${activeUserId}`, {
           headers: { Authorization: `Bearer ${token}` },
         })
         .then((res) => setActiveUser(res.data.user || null))
@@ -1012,7 +1017,7 @@ export default function ChatPage() {
 
     try {
       await axios.post(
-        "http://localhost:3000/api/chat/send",
+        "https://experience-9t2k.onrender.com/api/chat/send",
         { receiverId: activeUserId, message: messageContent },
         { headers: { Authorization: `Bearer ${token}` } }
       );

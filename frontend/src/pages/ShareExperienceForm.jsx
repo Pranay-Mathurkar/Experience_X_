@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 const initialRound = { roundType: "", mode: "", difficulty: "", questions: "" };
 
 export default function ShareExperiencePage() {
-  const { user } = useAuth();
+  const {user} = useAuth();
   const token = localStorage.getItem("token");
 
   const navigate = useNavigate();

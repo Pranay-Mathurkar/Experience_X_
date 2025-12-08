@@ -480,6 +480,101 @@ const toggleFollowCompany = async (req, res) => {
 
 
 
+// ✅ CHECK IF COMPANY HAS ANY EXPERIENCE (FOR HOME PAGE SEARCH)
+const checkCompanyHasExperience = async (req, res) => {
+  try {
+    const { companyName } = req.params;
+
+    const count = await InterviewExperience.countDocuments({
+      company: companyName.toLowerCase(),
+    });
+
+    return res.status(200).json({
+      exists: count > 0,
+      total: count,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: "Failed to check company experiences",
+      error: error.message,
+    });
+  }
+};
+
+const getCompanyStats = async (req, res) => {
+  try {
+    const {
+      page = 1,
+      limit = 8,
+      sort = "experience-desc",
+      search = "",
+      trending = false,
+    } = req.query;
+
+    let pipeline = [
+      {
+        $group: {
+          _id: "$company",
+          totalExperiences: { $sum: 1 },
+          avgRating: { $avg: "$rating" },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          company: "$_id",
+          totalExperiences: 1,
+          avgRating: { $round: ["$avgRating", 1] },
+        },
+      },
+    ];
+
+    // ✅ SEARCH FILTER
+    if (search) {
+      pipeline.push({
+        $match: {
+          company: { $regex: search, $options: "i" },
+        },
+      });
+    }
+
+    // ✅ SORTING
+    let sortStage = {};
+    if (sort === "experience-desc")
+      sortStage = { totalExperiences: -1 };
+    if (sort === "experience-asc")
+      sortStage = { totalExperiences: 1 };
+    if (sort === "rating-desc") sortStage = { avgRating: -1 };
+    if (sort === "rating-asc") sortStage = { avgRating: 1 };
+
+    pipeline.push({ $sort: sortStage });
+
+    // ✅ TRENDING TOP 10
+    if (trending === "true") {
+      pipeline.push({ $limit: 10 });
+    }
+
+    // ✅ PAGINATION
+    const skip = (page - 1) * limit;
+    pipeline.push({ $skip: skip });
+    pipeline.push({ $limit: Number(limit) });
+
+    const companies = await InterviewExperience.aggregate(pipeline);
+
+    const totalCompanies = await InterviewExperience.distinct("company");
+
+    res.status(200).json({
+      data: companies,
+      total: totalCompanies.length,
+      page: Number(page),
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Failed to load company stats" });
+  }
+};
+
+
+
 
 
 export { 
@@ -495,6 +590,8 @@ getCompanyExperiences,
  deleteInterviewExperience,
   toggleBookmark,
   toggleFollowCompany,
+   checkCompanyHasExperience ,
+   getCompanyStats,
  
 
 };

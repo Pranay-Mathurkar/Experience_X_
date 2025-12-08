@@ -1,95 +1,103 @@
-import React from 'react';
+import React from "react";
+import { Link } from "react-router-dom";
 
 export function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="w-full bg-slate-900 text-slate-300 py-16">
-      <div className="max-w-7xl mx-auto px-4 sm:px-8">
+    <footer className="w-full bg-slate-950 text-slate-400 py-16 border-t border-slate-800/50 font-sans">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
-       
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
-          
-      
-          <div className="space-y-4">
-       
-            <div className="flex items-center gap-2 cursor-pointer group w-fit">
-              <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-gradient-to-tr from-purple-600 to-indigo-600 text-white shadow-lg shadow-purple-900/20">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" className="text-white/90">
-                   <path d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456zM16.894 20.567L16.5 21.75l-.394-1.183a2.25 2.25 0 00-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 001.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 001.423 1.423l1.183.394-1.183.394a2.25 2.25 0 00-1.423 1.423z" />
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-12 mb-16">
+        
+          <div className="lg:col-span-5 space-y-6">
+            <Link to="/" className="flex items-center gap-2.5 cursor-pointer w-fit">
+              <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-br from-purple-600 to-indigo-600 text-white shadow-lg shadow-purple-900/20">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M12 2v20"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
                 </svg>
               </div>
-              <span className="text-xl font-bold tracking-tight text-white group-hover:text-purple-400 transition-colors">
-                Interview<span className="text-purple-500">Archive</span>
+              <span className="text-2xl font-bold tracking-tight text-white">
+                Interview<span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-indigo-400">Archive</span>
               </span>
-            </div>
+            </Link>
             
-            <p className="text-sm text-slate-400 leading-relaxed max-w-xs">
-              Democratizing interview knowledge. We help engineers crack their dream jobs at top tech companies through shared experiences.
+            <p className="text-slate-400 leading-relaxed text-sm max-w-sm">
+              Democratizing interview knowledge for students. We help engineers crack their dream jobs at top tech companies through verified, anonymous shared experiences.
             </p>
-          </div>
 
-   
-          <div>
-            <h3 className="text-white font-semibold mb-4 tracking-wide">Platform</h3>
-            <ul className="space-y-3 text-sm">
-              <li><a href="#" className="hover:text-purple-400 transition-colors">Browse Companies</a></li>
-              <li><a href="#" className="hover:text-purple-400 transition-colors">Read Reviews</a></li>
-              <li><a href="#" className="hover:text-purple-400 transition-colors">Submit Interview</a></li>
-              <li><a href="#" className="hover:text-purple-400 transition-colors">Pricing</a></li>
-            </ul>
-          </div>
-
-   
-          <div>
-            <h3 className="text-white font-semibold mb-4 tracking-wide">Resources</h3>
-            <ul className="space-y-3 text-sm">
-              <li><a href="#" className="hover:text-purple-400 transition-colors">Blog</a></li>
-              <li><a href="#" className="hover:text-purple-400 transition-colors">Salary Calculator</a></li>
-              <li><a href="#" className="hover:text-purple-400 transition-colors">Resume Guide</a></li>
-              <li><a href="#" className="hover:text-purple-400 transition-colors">Community</a></li>
-            </ul>
-          </div>
-
- 
-          <div>
-            <h3 className="text-white font-semibold mb-4 tracking-wide">Stay Updated</h3>
-            <p className="text-xs text-slate-400 mb-4">
-              Get the latest interview questions sent to your inbox.
-            </p>
-            <div className="flex flex-col gap-2">
-              <input 
-                type="email" 
-                placeholder="Enter your email" 
-                className="w-full px-4 py-2 rounded-lg bg-slate-800 border border-slate-700 text-white text-sm focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500 transition-all"
-              />
-              <button className="w-full px-4 py-2 rounded-lg bg-purple-600 hover:bg-purple-500 text-white text-sm font-semibold transition-colors">
-                Subscribe
-              </button>
+            <div className="flex gap-4 pt-2">
+              {[
+                { name: 'Twitter', path: "M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-12.7 12.5S.2 5.3 7.8 4.5c2.1-.2 3.2-.4 4.4 1.2 1.6-1.3 3.2-2.5 4.8-1.2" },
+                { name: 'LinkedIn', path: "M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z M2 9h4v12H2z M4 4a2 2 0 1 1-2 2 2 2 0 0 1 2-2z", fill: true },
+                { name: 'GitHub', path: "M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22" }
+              ].map((icon) => (
+                <a 
+                  key={icon.name}
+                  href="#" 
+                  className="w-10 h-10 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center text-slate-400 hover:text-white hover:border-purple-500/50 hover:bg-purple-500/10 transition-all duration-300"
+                  aria-label={icon.name}
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill={icon.fill ? "currentColor" : "none"} stroke={icon.fill ? "none" : "currentColor"} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d={icon.path} />
+                  </svg>
+                </a>
+              ))}
             </div>
           </div>
+
+        
+          <div className="lg:col-span-3 md:col-span-1">
+            <h3 className="text-white font-semibold mb-6 tracking-wide text-sm uppercase">Explore</h3>
+            <ul className="space-y-4">
+              {[
+                { name: "Browse Companies", to: "/" },
+                { name: "Features", to: "/features" },
+                { name: "Pricing", to: "/pricing" },
+                { name: "About Us", to: "/about" }
+              ].map((item) => (
+                <li key={item.name}>
+                  <Link to={item.to} className="text-sm hover:text-purple-400 transition-colors duration-200 block">
+                    {item.name}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+         
+          <div className="lg:col-span-4 md:col-span-1">
+            <h3 className="text-white font-semibold mb-6 tracking-wide text-sm uppercase">Stay Updated</h3>
+            <p className="text-sm text-slate-400 mb-4">
+              Subscribe to get the latest interview questions and placement trends directly to your inbox.
+            </p>
+            <form className="flex flex-col gap-3">
+              <div className="relative">
+                <input
+                  type="email"
+                  placeholder="Enter your college email"
+                  className="w-full px-4 py-3 rounded-xl bg-slate-900 border border-slate-800 text-white text-sm focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500 transition-all placeholder:text-slate-600"
+                />
+              </div>
+              <button className="w-full px-4 py-3 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white text-sm font-bold transition-all shadow-lg shadow-purple-900/20 active:scale-[0.98]">
+                Subscribe to Newsletter
+              </button>
+            </form>
+          </div>
+
         </div>
 
-  
-        <div className="border-t border-slate-800 my-8"></div>
-
- 
-        <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-slate-500">
-          
-          <p>© {currentYear} Interview Archive. All rights reserved.</p>
-
-          <div className="flex items-center gap-6">
-            <a href="#" className="hover:text-white transition-colors" aria-label="Twitter">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-12.7 12.5S.2 5.3 7.8 4.5c2.1-.2 3.2-.4 4.4 1.2 1.6-1.3 3.2-2.5 4.8-1.2"/></svg>
-            </a>
-            <a href="#" className="hover:text-white transition-colors" aria-label="GitHub">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg>
-            </a>
-            <a href="#" className="hover:text-white transition-colors" aria-label="LinkedIn">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect width="4" height="12" x="2" y="9"/><circle cx="4" cy="4" r="2"/></svg>
-            </a>
+        {/* Bottom Bar */}
+        <div className="pt-8 border-t border-slate-800/50 flex flex-col md:flex-row justify-between items-center gap-4">
+          <p className="text-sm text-slate-500">
+            © {currentYear} Interview Archive. Built with <span className="text-red-500 animate-pulse">♥</span> at MNNIT Allahabad.
+          </p>
+          <div className="flex gap-6 text-sm">
+            <Link to="/login" className="text-slate-500 hover:text-white transition-colors">Log In</Link>
+            <Link to="/signup" className="text-slate-500 hover:text-white transition-colors">Sign Up</Link>
           </div>
         </div>
+
       </div>
     </footer>
   );

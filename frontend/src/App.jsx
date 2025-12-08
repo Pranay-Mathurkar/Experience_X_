@@ -20,7 +20,7 @@ export default function App() {
       <BrowserRouter>
         <AuthProvider>
           <Routes>
-         <Route path="/edit/:id" element={<EditExperiencePage />} />    
+         <Route path="/edit/:id" element={<EditExperiencePage />} />
             <Route path="/home" element={<MainPage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/share-experience" element={<ShareExperienceForm />} />

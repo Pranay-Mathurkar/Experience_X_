@@ -222,6 +222,25 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  // ================== GOOGLE LOGIN ==================
+const handleGoogleLogin = async (credentialResponse) => {
+  try {
+    const res = await client.post("/auth/google", {
+      token: credentialResponse.credential,
+    });
+
+    if (res.status === 200) {
+      localStorage.setItem("token", res.data.token);
+      setUser(res.data.user);
+      navigate("/home");
+    }
+  } catch (err) {
+    console.error("Google login failed:", err.response?.data || err.message);
+    throw err;
+  }
+};
+
+
   // ================== LOGOUT ==================
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -235,6 +254,7 @@ export const AuthProvider = ({ children }) => {
     handleSignup,
     handleLogin,
     handleLogout,
+    handleGoogleLogin,
   };
 
   return (

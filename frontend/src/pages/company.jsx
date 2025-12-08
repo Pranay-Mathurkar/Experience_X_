@@ -180,7 +180,10 @@ export default function Company() {
     try {
       const res = await axios.get(`${API}/me`, { headers });
       const user = res.data.user;
-      setIsFollowing(user.followedCompanies?.includes(companyName));
+      setIsFollowing(
+  user.followedCompanies?.includes(companyName.toLowerCase())
+);
+
       setBookmarks(user.bookmarks || []);
     } catch (err) {
       console.error("Failed to fetch user profile", err);

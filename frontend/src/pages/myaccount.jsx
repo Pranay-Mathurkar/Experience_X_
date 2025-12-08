@@ -560,7 +560,7 @@ const StatCard = ({ icon, label, value, color = "indigo" }) => {
   );
 };
 
-const API_BASE = "http://localhost:3000";
+const API_BASE = "https://experience-9t2k.onrender.com";
 
 export default function MyAccount() {
   const [myExperiences, setMyExperiences] = useState([]);

@@ -44,10 +44,10 @@ async function handleSubmit(e) {
 
     try {
       if (isLogin) {
-        // ✅ LOGIN
+
         await handleLogin(email, password);
       } else {
-        // ✅ SIGNUP
+      
         await handleSignup(name, email, password);
       }
     } catch (err) {

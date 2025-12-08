@@ -1,13 +1,19 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
-
 const ExperienceCard = ({ exp, isBookmarked, toggleBookmark, navigate }) => {
   const dateString = new Date(exp.createdAt).toLocaleDateString("en-US", {
     year: "numeric",
     month: "short",
     day: "numeric",
   });
+
+  // ✅ ADD THIS FUNCTION
+  const handleChatClick = (e) => {
+    e.stopPropagation(); // prevents opening experience detail
+    navigate(`/chat/${exp.user?._id}`); // sender → chat with experience owner
+  };
+
 
   return (
     <article
@@ -121,6 +127,16 @@ const ExperienceCard = ({ exp, isBookmarked, toggleBookmark, navigate }) => {
           <span className="text-[10px] text-amber-600/80">/ 5</span>
         </div>
 
+         <div className="flex items-center gap-2">
+          {/* Chat button */}
+          <button
+            onClick={handleChatClick}
+            className="text-[11px] font-semibold text-white bg-indigo-600 px-3 py-1.5 rounded-lg hover:bg-indigo-700"
+          >
+            💬 Chat
+          </button>
+
+
         <span className="inline-flex items-center gap-1 text-[11px] font-medium text-indigo-600 group-hover:gap-1.5 transition-all">
           View details
           <svg
@@ -137,6 +153,7 @@ const ExperienceCard = ({ exp, isBookmarked, toggleBookmark, navigate }) => {
             />
           </svg>
         </span>
+          </div>
       </footer>
     </article>
   );

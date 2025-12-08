@@ -9,6 +9,8 @@ import Company from "./pages/company";
 import ExperienceDetail from "./pages/detail";
 import MyAccount from "./pages/myaccount";
 import EditExperiencePage from "./pages/EditExperiencePage";
+import ChatPage from "./pages/chatpage";
+
 
 import { GoogleOAuthProvider } from "@react-oauth/google";
 
@@ -27,6 +29,8 @@ export default function App() {
             <Route path="/company/:companyName" element={<Company />} />
             <Route path="/experience/:id" element={<ExperienceDetail />} />
             <Route path="/account" element={<MyAccount />} />
+            <Route path="/chat" element={<ChatPage />} />
+            <Route path="/chat/:userId" element={<ChatPage />} />
           </Routes>
         </AuthProvider>
       </BrowserRouter>

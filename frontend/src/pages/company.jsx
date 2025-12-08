@@ -673,7 +673,8 @@ export default function Company() {
   const [showFilters, setShowFilters] = useState(false);
 
   const token = localStorage.getItem("token");
-  const API = "http://localhost:3000/api";
+  const API = "https://experience-9t2k.onrender.com/api";
+
   const headers = { Authorization: `Bearer ${token}` };
 
   const fetchCompanyExperiences = useCallback(async () => {

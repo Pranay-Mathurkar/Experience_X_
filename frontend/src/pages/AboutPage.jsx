@@ -130,7 +130,7 @@ export default function AboutPage() {
               </p>
             </div>
             <button
-              onClick={() => (window.location.href = "/")} // or open your ShareExperienceForm
+              onClick={() => (window.location.href = "/share-experience")} // or open your ShareExperienceForm
               className="inline-flex items-center justify-center px-5 py-2.5 rounded-full bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium shadow-md"
             >
               Share your experience

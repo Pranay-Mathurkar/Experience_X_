@@ -42,12 +42,9 @@ export default function ShareExperiencePage() {
     form.offerStatus.trim() !== "" &&
     form.overallDifficulty.trim() !== "" &&
     form.tags.trim() !== "" &&
-    form.stipend.trim() !== "" &&
-    form.baseSalary.trim() !== "" &&
-    form.stocks.trim() !== "" &&
     form.mainExperience.trim() !== "" &&
     form.tips.trim() !== "" &&
-    form.rating.trim() !== "" && // 👈 rating required
+    form.rating.trim() !== "" && 
     form.rounds.every(
       (r) =>
         r.roundType.trim() !== "" &&
@@ -135,7 +132,7 @@ export default function ShareExperiencePage() {
         mainExperience: "",
         tips: "",
         rounds: [initialRound],
-        rating: "", // 👈 reset
+        rating: "", 
       });
     } catch (err) {
       setSubmitting(false);
@@ -455,20 +452,20 @@ export default function ShareExperiencePage() {
             {/* ---------------- COMPENSATION ---------------- */}
             <section className="space-y-4">
               <div>
-                <h2 className="text-xl font-semibold text-slate-900">Compensation *</h2>
-                <p className="text-xs text-slate-500 mt-1">All compensation fields are required.</p>
+                <h2 className="text-xl font-semibold text-slate-900">Compensation(optional)</h2>
+                {/* <p className="text-xs text-slate-500 mt-1">All compensation fields are required.</p> */}
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div>
                   <label className="block text-sm font-semibold text-slate-700 mb-2">
-                    Stipend (Monthly) *
+                    Stipend (Monthly) 
                   </label>
                   <input
                     name="stipend"
                     value={form.stipend}
                     onChange={handleChange}
-                    required
+                    
                     className="w-full p-3 border border-slate-200 bg-slate-50 rounded-xl text-slate-900 focus:outline-none focus:bg-white focus:border-purple-500 focus:ring-2 focus:ring-purple-100 transition-all"
                     placeholder="₹80,000/month"
                   />
@@ -476,13 +473,13 @@ export default function ShareExperiencePage() {
 
                 <div>
                   <label className="block text-sm font-semibold text-slate-700 mb-2">
-                    Base Salary (Annual) *
+                    Base Salary (Annual) 
                   </label>
                   <input
                     name="baseSalary"
                     value={form.baseSalary}
                     onChange={handleChange}
-                    required
+                  
                     className="w-full p-3 border border-slate-200 bg-slate-50 rounded-xl text-slate-900 focus:outline-none focus:bg-white focus:border-purple-500 focus:ring-2 focus:ring-purple-100 transition-all"
                     placeholder="₹25 LPA"
                   />
@@ -490,13 +487,13 @@ export default function ShareExperiencePage() {
 
                 <div>
                   <label className="block text-sm font-semibold text-slate-700 mb-2">
-                    Stocks / Bonus *
+                    Stocks / Bonus 
                   </label>
                   <input
                     name="stocks"
                     value={form.stocks}
                     onChange={handleChange}
-                    required
+                   
                     className="w-full p-3 border border-slate-200 bg-slate-50 rounded-xl text-slate-900 focus:outline-none focus:bg-white focus:border-purple-500 focus:ring-2 focus:ring-purple-100 transition-all"
                     placeholder="$50k RSUs, joining bonus"
                   />

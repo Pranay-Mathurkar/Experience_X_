@@ -184,8 +184,7 @@ const createInterviewExperience = async (req, res) => {
       mainExperience,
       tips,
       rounds,
-      rating
-     
+      rating,
     } = req.body;
 
     if (!company || !role || !mainExperience) {
@@ -213,25 +212,25 @@ const createInterviewExperience = async (req, res) => {
       mainExperience,
       tips,
       rounds,
-      rating
-     
+      rating,
     });
 
-    // ✅✅✅ FIND ALL FOLLOWERS OF THIS COMPANY
+    // ✅ FIND ALL FOLLOWERS OF THIS COMPANY
     const followers = await User.find({
       followedCompanies: normalizedCompany,
     });
 
-    // ✅✅✅ SEND EMAIL TO EACH FOLLOWER
-    for (let follower of followers) {
-      await sendNewExperienceEmail(follower.email, company);
-    }
-
-    return res.status(httpStatus.CREATED).json({
-      message: "Interview experience submitted & emails sent to followers ✅",
-      data: experience,
+    // ✅ SEND EMAILS IN BACKGROUND (NON-BLOCKING)
+    followers.forEach((follower) => {
+      sendNewExperienceEmail(follower.email, company).catch((err) =>
+        console.error("Email send failed:", err.message)
+      );
     });
 
+    return res.status(httpStatus.CREATED).json({
+      message: "Interview experience submitted ✅",
+      data: experience,
+    });
   } catch (error) {
     console.error("Experience + Email Error:", error);
 
@@ -241,6 +240,7 @@ const createInterviewExperience = async (req, res) => {
     });
   }
 };
+
 
 /* =========================================================
     2. GET ALL INTERVIEW EXPERIENCES (COMPANY PAGE)

@@ -10,7 +10,7 @@ export const AuthContext = createContext({});
 
 // ✅ Use correct backend port
 const client = axios.create({
-  baseURL: "https://experience-9t2k.onrender.com", // keep this if backend is really on 3000
+  baseURL: "https://experience-9t2k.onrender.com/api", // keep this if backend is really on 3000
 });
 
 // ✅ Attach token to every request

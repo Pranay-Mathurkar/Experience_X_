@@ -405,7 +405,7 @@ export default function ExperienceDetail() {
     const fetchExperience = async () => {
       try {
         const res = await axios.get(
-          `http://localhost:3000/api/share-experience/${id}`
+          `https://experience-9t2k.onrender.com/api/share-experience/${id}`
         );
 
         setExperience(res.data);

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import exLogo from "../assets/experience-x-logo.png";
+import exLogo from "/experience-x-logo.png" ;
 import { useAuth } from "../contexts/AuthContext";
 
 const initialRound = { roundType: "", mode: "", difficulty: "", questions: "" };

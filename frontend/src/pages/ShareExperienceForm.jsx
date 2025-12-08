@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import exLogo from "../assets/experience-x-logo.png";
+import exLogo from "/experience-x-logo.png" ;
 import { useAuth } from "../contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 

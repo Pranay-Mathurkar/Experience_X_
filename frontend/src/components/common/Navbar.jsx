@@ -9,9 +9,9 @@ export function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const navigate = useNavigate();
-  const { user, handleLogout } = useAuth(); // ✅ REAL AUTH STATE
+  const { user, handleLogout } = useAuth(); 
 
-  // ✅ TRUE ONLY IF USER EXISTS
+ 
   const isLoggedIn = !!user;
 
   useEffect(() => {
@@ -95,7 +95,7 @@ export function Navbar() {
                   </span>
 
                   <button
-                    onClick={handleLogout} // ✅ REAL LOGOUT
+                    onClick={handleLogout} 
                     className="px-6 py-2.5 text-sm font-semibold text-white bg-red-500 rounded-full"
                   >
                     Logout

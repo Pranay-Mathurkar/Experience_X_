@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import { useNavigate } from "react-router-dom";
 
 const companies = [
@@ -35,17 +35,13 @@ export function CompanyGrid() {
           <div
             key={index}
             onClick={() => navigate(`/company/${company.name.toLowerCase()}`)}
-            className="group relative p-6 bg-white rounded-2xl border border-slate-200 shadow-md 
+            className="group relative p-6 bg-white rounded-2xl border border-slate-200 shadow-sm 
                        cursor-pointer overflow-hidden transition-all duration-500 
-                       hover:-translate-y-3 hover:shadow-purple-500/20 hover:shadow-2xl
+                       hover:-translate-y-2 hover:shadow-xl hover:shadow-purple-500/10 hover:border-purple-200
                        animate-itemFade"
-            style={{ animationDelay: `${index * 0.12}s` }}
+            style={{ animationDelay: `${index * 0.1}s` }}
           >
             <div className="absolute inset-0 bg-gradient-to-br from-transparent via-transparent to-purple-100/40 opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-
-            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent 
-                            translate-x-[-200%] group-hover:translate-x-[200%] 
-                            transition-transform duration-700 ease-out" />
 
             <div className="relative z-10 flex flex-col h-full">
               <div className="flex justify-between items-start mb-5">
@@ -55,8 +51,7 @@ export function CompanyGrid() {
                 </div>
 
                 <span className="px-3 py-1 rounded-full text-xs font-medium bg-slate-100 text-slate-600
-                                 transition-all duration-500 group-hover:bg-purple-50 group-hover:text-purple-700 
-                                 group-hover:scale-110">
+                                 transition-all duration-500 group-hover:bg-purple-50 group-hover:text-purple-700">
                   {company.tag}
                 </span>
               </div>
@@ -80,6 +75,8 @@ export function CompanyGrid() {
                   fill="none"
                   stroke="currentColor"
                   strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
                   className="ml-2 transition-transform duration-300 group-hover:translate-x-1"
                 >
                   <line x1="5" y1="12" x2="19" y2="12"></line>
@@ -94,19 +91,19 @@ export function CompanyGrid() {
       <style>
         {`
           @keyframes itemFade {
-            from { opacity: 0; transform: translateY(25px); }
+            from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
           }
           @keyframes titleFade {
-            from { opacity: 0; transform: translateY(20px); }
+            from { opacity: 0; transform: translateY(15px); }
             to { opacity: 1; transform: translateY(0); }
           }
 
           .animate-itemFade {
-            animation: itemFade 0.85s ease-out forwards;
+            animation: itemFade 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
           }
           .animate-titleFade {
-            animation: titleFade 1s ease-out forwards;
+            animation: titleFade 0.8s ease-out forwards;
           }
         `}
       </style>

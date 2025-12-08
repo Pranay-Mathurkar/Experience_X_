@@ -5,7 +5,9 @@ export function AddCompanyButton() {
   const navigate = useNavigate();
 
   const handleClick = () => {
+   
     const isLoggedIn = true; 
+
     if (isLoggedIn) {
       navigate('/add-review');
     } else {
@@ -35,6 +37,7 @@ export function AddCompanyButton() {
           <line x1="12" y1="5" x2="12" y2="19"></line>
           <line x1="5" y1="12" x2="19" y2="12"></line>
         </svg>
+       
         <span className="absolute inset-0 bg-white/20 rounded-full scale-0 group-hover:scale-100 transition-transform duration-500"></span>
       </button>
     </div>

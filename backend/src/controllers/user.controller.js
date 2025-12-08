@@ -1,12 +1,19 @@
 import httpStatus from "http-status";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import crypto from "crypto";
+import { OAuth2Client } from "google-auth-library";
+import nodemailer from "nodemailer";
+
 
 import { User } from "../models/user.model.js";
 
 import {InterviewExperience} from "../models/form.model.js";
+import { sendNewExperienceEmail } from "../utils/sendemail.js";
 
 
+
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 
 
@@ -109,14 +116,58 @@ const login = async (req, res) => {
   }
 };
 
+const googleLogin = async (req, res) => {
+  try {
+    const { token } = req.body;
 
+    const ticket = await client.verifyIdToken({
+      idToken: token,
+      audience: process.env.GOOGLE_CLIENT_ID,
+    });
+
+    const { email, name } = ticket.getPayload();
+
+    let user = await User.findOne({ email });
+
+    if (!user) {
+      const hashedPassword = await bcrypt.hash(crypto.randomBytes(16).toString("hex"), 10);
+      user = await User.create({
+        name,
+        email,
+        password: hashedPassword,
+      });
+    }
+
+    const jwtToken = jwt.sign(
+      { id: user._id, email: user.email },
+      process.env.JWT_SECRET,
+      { expiresIn: process.env.JWT_EXPIRES_IN }
+    );
+
+    return res.status(200).json({
+      message: "Google login successful",
+      token: jwtToken,
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+      },
+    });
+
+  } catch (error) {
+    return res.status(401).json({
+      message: "Google authentication failed",
+      error: error.message,
+    });
+  }
+};
 
 /* =========================================================
     1. CREATE INTERVIEW EXPERIENCE (FORM SUBMISSION)
    POST /api/interviews
    LOGIN REQUIRED
 ========================================================= */
- const createInterviewExperience = async (req, res) => {
+const createInterviewExperience = async (req, res) => {
   try {
     const {
       company,
@@ -133,7 +184,8 @@ const login = async (req, res) => {
       mainExperience,
       tips,
       rounds,
-      codingLinks,
+      rating
+     
     } = req.body;
 
     if (!company || !role || !mainExperience) {
@@ -142,9 +194,12 @@ const login = async (req, res) => {
       });
     }
 
+    // ✅ SAVE COMPANY IN LOWERCASE (IMPORTANT FOR MATCHING)
+    const normalizedCompany = company.toLowerCase();
+
     const experience = await InterviewExperience.create({
-      user: req.user._id, 
-      company,
+      user: req.user._id,
+      company: normalizedCompany,
       role,
       location,
       season,
@@ -158,14 +213,28 @@ const login = async (req, res) => {
       mainExperience,
       tips,
       rounds,
-      codingLinks,
+      rating
+     
     });
 
+    // ✅✅✅ FIND ALL FOLLOWERS OF THIS COMPANY
+    const followers = await User.find({
+      followedCompanies: normalizedCompany,
+    });
+
+    // ✅✅✅ SEND EMAIL TO EACH FOLLOWER
+    for (let follower of followers) {
+      await sendNewExperienceEmail(follower.email, company);
+    }
+
     return res.status(httpStatus.CREATED).json({
-      message: "Interview experience submitted successfully",
+      message: "Interview experience submitted & emails sent to followers ✅",
       data: experience,
     });
+
   } catch (error) {
+    console.error("Experience + Email Error:", error);
+
     return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
       message: "Failed to submit experience",
       error: error.message,
@@ -316,15 +385,141 @@ const getCompanyExperiences = async (req, res) => {
   }
 };
 
+
+
+// ✅ DELETE MY EXPERIENCE
+const deleteInterviewExperience = async (req, res) => {
+  try {
+    const experience = await InterviewExperience.findById(req.params.id);
+
+    if (!experience) {
+      return res.status(httpStatus.NOT_FOUND).json({
+        message: "Experience not found",
+      });
+    }
+
+    if (experience.user.toString() !== req.user._id.toString()) {
+      return res.status(httpStatus.FORBIDDEN).json({
+        message: "You are not allowed to delete this experience",
+      });
+    }
+
+    await experience.deleteOne();
+
+    return res.status(httpStatus.OK).json({
+      message: "Experience deleted successfully",
+    });
+  } catch (error) {
+    return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
+      message: "Delete failed",
+      error: error.message,
+    });
+  }
+};
+
+// ✅ BOOKMARK / UNBOOKMARK EXPERIENCE
+const toggleBookmark = async (req, res) => {
+  try {
+    const { experienceId } = req.body;
+
+    const user = await User.findById(req.user._id);
+
+    if (!user.bookmarks) user.bookmarks = [];
+
+    if (user.bookmarks.includes(experienceId)) {
+      user.bookmarks.pull(experienceId); // Unbookmark
+    } else {
+      user.bookmarks.push(experienceId); // Bookmark
+    }
+
+    await user.save();
+
+    return res.status(httpStatus.OK).json({
+      message: "Bookmark updated",
+      bookmarks: user.bookmarks,
+    });
+  } catch (error) {
+    return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
+      message: "Bookmark failed",
+      error: error.message,
+    });
+  }
+};
+
+// ✅ FOLLOW / UNFOLLOW COMPANY
+const toggleFollowCompany = async (req, res) => {
+  try {
+    const { companyName } = req.body;
+
+    const normalizedCompany = companyName.toLowerCase();
+
+    const user = await User.findById(req.user._id);
+
+    if (!user.followedCompanies) user.followedCompanies = [];
+
+    if (user.followedCompanies.includes(normalizedCompany)) {
+      user.followedCompanies.pull(normalizedCompany); // Unfollow
+    } else {
+      user.followedCompanies.push(normalizedCompany); // Follow
+    }
+
+    await user.save();
+
+    return res.status(httpStatus.OK).json({
+      message: "Follow list updated",
+      followedCompanies: user.followedCompanies,
+    });
+
+  } catch (error) {
+    return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
+      message: "Follow failed",
+      error: error.message,
+    });
+  }
+};
+
+
+
+// ✅ CHECK IF COMPANY HAS ANY EXPERIENCE (FOR HOME PAGE SEARCH)
+const checkCompanyHasExperience = async (req, res) => {
+  try {
+    const { companyName } = req.params;
+
+    const count = await InterviewExperience.countDocuments({
+      company: companyName.toLowerCase(),
+    });
+
+    return res.status(200).json({
+      exists: count > 0,
+      total: count,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: "Failed to check company experiences",
+      error: error.message,
+    });
+  }
+};
+
+
+
+
+
 export { 
 signup,
 login, 
+googleLogin,
 createInterviewExperience,
 getAllInterviewExperiences,
 getSingleInterviewExperience,
 updateInterviewExperience,
 getMyInterviewExperiences,
 getCompanyExperiences,
+ deleteInterviewExperience,
+  toggleBookmark,
+  toggleFollowCompany,
+   checkCompanyHasExperience ,
+ 
 
 };
 

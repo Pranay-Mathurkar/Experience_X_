@@ -21,7 +21,7 @@ export function Navbar() {
   const navLinks = [
     { name: 'Home', to: '/' },
     { name: 'About', to: '/about' },
-    { name: 'Share Experience', to: '/share-experience' },
+    { name: 'Share Experience', to: '/add-review' },
   ];
 
   return (
@@ -29,8 +29,8 @@ export function Navbar() {
       <nav
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ease-in-out ${
           scrolled
-            ? 'bg-white/70 backdrop-blur-xl border-b border-purple-100/50 shadow-sm py-3'
-            : 'bg-white/50 backdrop-blur-md border-b border-transparent py-5'
+            ? 'bg-white/80 backdrop-blur-xl border-b border-purple-100/50 shadow-sm py-3'
+            : 'bg-white/60 backdrop-blur-md border-b border-transparent py-5'
         }`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-8">
@@ -90,11 +90,11 @@ export function Navbar() {
               ) : (
                 <>
                   <span className="text-sm font-semibold text-slate-700">
-                    Hi, {user?.name}
+                    Hi, {user?.name?.split(' ')[0]}
                   </span>
                   <button
                     onClick={handleLogout}
-                    className="px-6 py-2.5 text-sm font-semibold text-white bg-red-500 rounded-full hover:bg-red-600 shadow-md transition-colors"
+                    className="px-6 py-2.5 text-sm font-semibold text-white bg-red-500 rounded-full hover:bg-red-600 shadow-md transition-colors shadow-red-500/20"
                   >
                     Logout
                   </button>

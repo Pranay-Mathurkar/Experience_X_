@@ -1,10 +1,14 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
+import { GoogleLogin } from "@react-oauth/google";
+
 
 export default function AuthForm() {
 
-  const { handleLogin, handleSignup } = useAuth();
+const { handleLogin, handleSignup, handleGoogleLogin } = useAuth();
+
+
 
   
   const [isLogin, setIsLogin] = useState(true); 
@@ -104,14 +108,15 @@ async function handleSubmit(e) {
 
           <form onSubmit={handleSubmit} className="space-y-4">
             
-            
-            <button
-              type="button"
-              className="w-full flex items-center justify-center gap-3 py-2.5 border border-slate-200 rounded-xl bg-white text-slate-700 font-medium hover:bg-slate-50 hover:border-slate-300 transition-all active:scale-[0.98]"
-            >
-              <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" className="w-5 h-5" />
-              <span>{isLogin ? "Sign in" : "Sign up"} with Google</span>
-            </button>
+           <GoogleLogin
+       onSuccess={(credentialResponse) => {
+    handleGoogleLogin(credentialResponse);
+  }}
+  onError={() => {
+    setError("Google login failed");
+  }}
+/>
+
 
             <div className="relative flex items-center py-2">
               <div className="flex-grow border-t border-slate-200"></div>

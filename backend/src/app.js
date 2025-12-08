@@ -14,10 +14,6 @@ const app = express();
 const server = http.createServer(app);
 
 
-
-// ============================
-// ✅ SOCKET.IO SETUP (FIXED)
-// ============================
 const io = new Server(server, {
   cors: {
     origin: [
@@ -39,13 +35,13 @@ io.on("connection", (socket) => {
   socket.on("sendMessage", (data) => {
     const { senderId, receiverId, message } = data;
 
-    // ✅ Send to RECEIVER
+
     io.to(receiverId).emit("receiveMessage", {
       sender: senderId,
       message,
     });
 
-    // ✅ Also send back to SENDER (prevents refresh issue)
+   
     io.to(senderId).emit("receiveMessage", {
       sender: senderId,
       message,
@@ -59,9 +55,7 @@ io.on("connection", (socket) => {
 
 
 
-// ============================
-// ✅ EXPRESS CORS (FIXED)
-// ============================
+
 app.use(cors({
   origin: [
     "http://localhost:5173",
@@ -76,19 +70,11 @@ app.use(express.urlencoded({ limit: "40kb", extended: true }));
 
 
 
-// ============================
-// ✅ ROUTES
-// ============================
-
-// ✅ API ROUTES
 app.use("/api", router);
 app.use("/api/chat", chatRoutes);
 
 
 
-// ============================
-// ✅ DATABASE + SERVER START
-// ============================
 const start = async () => {
   try {
     const connectionDb = await mongoose.connect(process.env.MONGO_URI);

@@ -1,14 +1,36 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 export function SearchBar() {
   const [isFocused, setIsFocused] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
+  const [error, setError] = useState(""); // ✅ NEW
   const navigate = useNavigate();
 
-  const handleSearch = () => {
-    if (!searchTerm.trim()) return;
-    navigate(`/company/${searchTerm.toLowerCase().trim()}`);
+  const API = "http://localhost:3000/api";
+
+  const handleSearch = async () => {
+    const company = searchTerm.toLowerCase().trim();
+    if (!company) return;
+
+    try {
+      setError("");
+
+      // ✅ CHECK IF COMPANY HAS ANY EXPERIENCE
+      const res = await axios.get(`${API}/company/${company}`);
+
+      if (res.data.data.length > 0) {
+        // ✅ ONLY NAVIGATE IF EXPERIENCE EXISTS
+        navigate(`/company/${company}`);
+      } else {
+        // ✅ STAY ON HOME + SHOW MESSAGE
+        setError(`❌ No experience added yet for "${company}"`);
+      }
+    } catch (err) {
+      console.error(err);
+      setError("⚠️ Something went wrong. Try again.");
+    }
   };
 
   return (
@@ -45,7 +67,7 @@ export function SearchBar() {
             </svg>
           </div>
 
-          {/* ✅ CONTROLLED INPUT */}
+          {/* ✅ INPUT */}
           <input
             type="text"
             className="w-full pl-16 pr-32 py-5 text-lg text-slate-700 bg-white rounded-full border border-slate-200 shadow-xl placeholder:text-slate-400 focus:outline-none focus:border-purple-300 focus:ring-4 focus:ring-purple-100 transition-all duration-300"
@@ -57,7 +79,7 @@ export function SearchBar() {
             onKeyDown={(e) => e.key === "Enter" && handleSearch()}
           />
 
-          {/* ✅ WORKING SEARCH BUTTON */}
+          {/* ✅ SEARCH BUTTON */}
           <div className="absolute right-2.5">
             <button
               onClick={handleSearch}
@@ -83,13 +105,20 @@ export function SearchBar() {
           </div>
         </div>
 
-        {/* ✅ TRENDING CLICKABLE */}
+        {/* ✅ ERROR MESSAGE ON HOME PAGE */}
+        {error && (
+          <p className="mt-4 text-red-600 font-semibold text-center">
+            {error}
+          </p>
+        )}
+
+        {/* ✅ TRENDING */}
         <div className="mt-4 flex flex-wrap justify-center gap-2 text-sm text-slate-500">
           <span>Trending:</span>
           {["Google", "Microsoft", "Amazon"].map((company) => (
             <span
               key={company}
-              onClick={() => navigate(`/company/${company.toLowerCase()}`)}
+              onClick={() => setSearchTerm(company)}
               className="cursor-pointer hover:text-purple-600 hover:underline transition-colors"
             >
               {company}

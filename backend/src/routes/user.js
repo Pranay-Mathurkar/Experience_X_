@@ -13,15 +13,12 @@ import {
   deleteInterviewExperience,     
   toggleBookmark,               
   toggleFollowCompany,  
+  checkCompanyHasExperience,
 } from "../controllers/user.controller.js";
 
 
 
-import {
-  sendMessage,
-  getMyChats,
-  getMessages,
-} from "../controllers/chat.controller.js";
+
 
 import { authMiddleware } from "../middlewares/auth.middleware.js";
 
@@ -57,12 +54,8 @@ router.post("/bookmark",authMiddleware,toggleBookmark);
 
 
 router.post("/follow-company",authMiddleware,toggleFollowCompany);
+router.get("/company-exists/:companyName", checkCompanyHasExperience);
 
-
-
-router.post("/send", authMiddleware, sendMessage);
-router.get("/my-chats", authMiddleware, getMyChats);
-router.get("/messages/:userId", authMiddleware, getMessages);
 
 
 

@@ -480,6 +480,29 @@ const toggleFollowCompany = async (req, res) => {
 
 
 
+// ✅ CHECK IF COMPANY HAS ANY EXPERIENCE (FOR HOME PAGE SEARCH)
+const checkCompanyHasExperience = async (req, res) => {
+  try {
+    const { companyName } = req.params;
+
+    const count = await InterviewExperience.countDocuments({
+      company: companyName.toLowerCase(),
+    });
+
+    return res.status(200).json({
+      exists: count > 0,
+      total: count,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: "Failed to check company experiences",
+      error: error.message,
+    });
+  }
+};
+
+
+
 
 
 export { 
@@ -495,6 +518,7 @@ getCompanyExperiences,
  deleteInterviewExperience,
   toggleBookmark,
   toggleFollowCompany,
+   checkCompanyHasExperience ,
  
 
 };

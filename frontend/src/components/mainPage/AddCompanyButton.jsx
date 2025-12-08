@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 
 export function AddCompanyButton() {
   const handleAddReview = () => {
-    const isLoggedIn = false;
+    const isLoggedIn = true;
     window.location.href = "/share-experience";
   };
 

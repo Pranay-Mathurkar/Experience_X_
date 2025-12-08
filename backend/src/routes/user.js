@@ -14,6 +14,7 @@ import {
   toggleBookmark,               
   toggleFollowCompany,  
   checkCompanyHasExperience,
+  getCompanyStats,
 } from "../controllers/user.controller.js";
 
 
@@ -55,6 +56,8 @@ router.post("/bookmark",authMiddleware,toggleBookmark);
 
 router.post("/follow-company",authMiddleware,toggleFollowCompany);
 router.get("/company-exists/:companyName", checkCompanyHasExperience);
+router.get("/company-stats", getCompanyStats);
+
 
 
 

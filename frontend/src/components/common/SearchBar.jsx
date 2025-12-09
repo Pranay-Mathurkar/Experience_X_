@@ -4,11 +4,9 @@ export function SearchBar({ setSearch }) {
   const [isFocused, setIsFocused] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
 
-  // Live Filter Handler
   const handleLiveSearch = (value) => {
     setSearchTerm(value);
 
-    // If empty -> clear filter, else -> filter grid
     if (!value.trim()) {
       setSearch(""); 
     } else {

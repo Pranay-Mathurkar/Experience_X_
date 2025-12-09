@@ -162,11 +162,7 @@ const googleLogin = async (req, res) => {
   }
 };
 
-/* =========================================================
-    1. CREATE INTERVIEW EXPERIENCE (FORM SUBMISSION)
-   POST /api/interviews
-   LOGIN REQUIRED
-========================================================= */
+
 const createInterviewExperience = async (req, res) => {
   try {
     const {
@@ -184,8 +180,7 @@ const createInterviewExperience = async (req, res) => {
       mainExperience,
       tips,
       rounds,
-      rating
-     
+      rating,
     } = req.body;
 
     if (!company || !role || !mainExperience) {
@@ -194,7 +189,7 @@ const createInterviewExperience = async (req, res) => {
       });
     }
 
-    // ✅ SAVE COMPANY IN LOWERCASE (IMPORTANT FOR MATCHING)
+  
     const normalizedCompany = company.toLowerCase();
 
     const experience = await InterviewExperience.create({
@@ -213,25 +208,25 @@ const createInterviewExperience = async (req, res) => {
       mainExperience,
       tips,
       rounds,
-      rating
-     
+      rating,
     });
 
-    // ✅✅✅ FIND ALL FOLLOWERS OF THIS COMPANY
+   
     const followers = await User.find({
       followedCompanies: normalizedCompany,
     });
 
-    // ✅✅✅ SEND EMAIL TO EACH FOLLOWER
-    for (let follower of followers) {
-      await sendNewExperienceEmail(follower.email, company);
-    }
-
-    return res.status(httpStatus.CREATED).json({
-      message: "Interview experience submitted & emails sent to followers ✅",
-      data: experience,
+   
+    followers.forEach((follower) => {
+      sendNewExperienceEmail(follower.email, company).catch((err) =>
+        console.error("Email send failed:", err.message)
+      );
     });
 
+    return res.status(httpStatus.CREATED).json({
+      message: "Interview experience submitted ✅",
+      data: experience,
+    });
   } catch (error) {
     console.error("Experience + Email Error:", error);
 
@@ -242,11 +237,8 @@ const createInterviewExperience = async (req, res) => {
   }
 };
 
-/* =========================================================
-    2. GET ALL INTERVIEW EXPERIENCES (COMPANY PAGE)
-   GET /api/interviews
-   PUBLIC
-========================================================= */
+
+
 
 
  const getAllInterviewExperiences = async (req, res) => {
@@ -262,15 +254,6 @@ const createInterviewExperience = async (req, res) => {
     });
   }
 };
-
-
-
-
-/* =========================================================
-    3. GET SINGLE FULL INTERVIEW (OPEN FULL DATA)
-   GET /api/interviews/:id
-   PUBLIC
-========================================================= */
 
 
 
@@ -292,16 +275,6 @@ const createInterviewExperience = async (req, res) => {
     });
   }
 };
-
-
-
-/* =========================================================
-    4. UPDATE FULL INTERVIEW EXPERIENCE (EDIT)
-   PUT /api/interviews/:id
-   LOGIN REQUIRED (OWNER ONLY)
-========================================================= */
-
-
 
 
  const updateInterviewExperience = async (req, res) => {
@@ -339,12 +312,6 @@ const createInterviewExperience = async (req, res) => {
     });
   }
 };
-
-/* =========================================================
-    5. GET LOGGED-IN USER'S OWN EXPERIENCES
-   GET /api/interviews/my
-   LOGIN REQUIRED
-========================================================= */
 
 
  const getMyInterviewExperiences = async (req, res) => {
@@ -387,7 +354,7 @@ const getCompanyExperiences = async (req, res) => {
 
 
 
-// ✅ DELETE MY EXPERIENCE
+
 const deleteInterviewExperience = async (req, res) => {
   try {
     const experience = await InterviewExperience.findById(req.params.id);
@@ -417,7 +384,6 @@ const deleteInterviewExperience = async (req, res) => {
   }
 };
 
-// ✅ BOOKMARK / UNBOOKMARK EXPERIENCE
 const toggleBookmark = async (req, res) => {
   try {
     const { experienceId } = req.body;
@@ -427,9 +393,9 @@ const toggleBookmark = async (req, res) => {
     if (!user.bookmarks) user.bookmarks = [];
 
     if (user.bookmarks.includes(experienceId)) {
-      user.bookmarks.pull(experienceId); // Unbookmark
+      user.bookmarks.pull(experienceId); 
     } else {
-      user.bookmarks.push(experienceId); // Bookmark
+      user.bookmarks.push(experienceId);
     }
 
     await user.save();
@@ -446,7 +412,6 @@ const toggleBookmark = async (req, res) => {
   }
 };
 
-// ✅ FOLLOW / UNFOLLOW COMPANY
 const toggleFollowCompany = async (req, res) => {
   try {
     const { companyName } = req.body;
@@ -479,8 +444,6 @@ const toggleFollowCompany = async (req, res) => {
 };
 
 
-
-// ✅ CHECK IF COMPANY HAS ANY EXPERIENCE (FOR HOME PAGE SEARCH)
 const checkCompanyHasExperience = async (req, res) => {
   try {
     const { companyName } = req.params;
@@ -529,7 +492,6 @@ const getCompanyStats = async (req, res) => {
       },
     ];
 
-    // ✅ SEARCH FILTER
     if (search) {
       pipeline.push({
         $match: {
@@ -537,8 +499,6 @@ const getCompanyStats = async (req, res) => {
         },
       });
     }
-
-    // ✅ SORTING
     let sortStage = {};
     if (sort === "experience-desc")
       sortStage = { totalExperiences: -1 };
@@ -549,12 +509,10 @@ const getCompanyStats = async (req, res) => {
 
     pipeline.push({ $sort: sortStage });
 
-    // ✅ TRENDING TOP 10
     if (trending === "true") {
       pipeline.push({ $limit: 10 });
     }
 
-    // ✅ PAGINATION
     const skip = (page - 1) * limit;
     pipeline.push({ $skip: skip });
     pipeline.push({ $limit: Number(limit) });

@@ -1,3 +1,7 @@
+
+
+
+
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -89,7 +93,7 @@ const StatCard = ({ icon, label, value, color = "indigo" }) => {
   );
 };
 
-const API_BASE = "http://localhost:3000";
+const API_BASE = "https://experience-9t2k.onrender.com/api";
 
 export default function MyAccount() {
   const [myExperiences, setMyExperiences] = useState([]);
@@ -110,7 +114,7 @@ export default function MyAccount() {
 
     try {
       const bookmarkPromises = bookmarkIds.map((id) =>
-        axios.get(`${API_BASE}/api/share-experience/${id}`, { headers })
+        axios.get(`${API_BASE}/share-experience/${id}`, { headers })
       );
 
       const results = await Promise.allSettled(bookmarkPromises);
@@ -136,8 +140,8 @@ export default function MyAccount() {
       setError("");
 
       const [resUser, resExp] = await Promise.all([
-        axios.get(`${API_BASE}/api/me`, { headers }),
-        axios.get(`${API_BASE}/api/my-experiences`, { headers }),
+        axios.get(`${API_BASE}/me`, { headers }),
+        axios.get(`${API_BASE}/my-experiences`, { headers }),
       ]);
 
       const fetchedUser = resUser.data.user;
@@ -171,7 +175,7 @@ export default function MyAccount() {
     if (!confirmed) return;
 
     try {
-      await axios.delete(`${API_BASE}/api/share-experience/${id}`, { headers });
+      await axios.delete(`${API_BASE}/share-experience/${id}`, { headers });
       setMyExperiences((prev) => prev.filter((exp) => exp._id !== id));
     } catch (err) {
       console.error(err);
@@ -255,20 +259,69 @@ export default function MyAccount() {
                 <p className="text-sm text-slate-500 mt-1">Manage your professional experiences</p>
               </div>
             </div>
-            <button
-              onClick={handleLogout}
-              className="flex items-center gap-2 px-5 py-2.5 bg-slate-100 text-slate-700 rounded-xl hover:bg-slate-200 transition-all duration-200 text-sm font-medium shadow-sm hover:shadow"
-            >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
-                />
-              </svg>
-              Logout
-            </button>
+         <div className="flex items-center gap-3">
+  {/* Logout button */}
+  <button
+    onClick={handleLogout}
+    className="flex items-center gap-2 px-5 py-2.5 bg-slate-100 text-slate-700 rounded-xl hover:bg-slate-200 transition-all duration-200 text-sm font-medium shadow-sm hover:shadow"
+  >
+    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth={2}
+        d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+      />
+    </svg>
+    Logout
+  </button>
+
+
+
+  {/* Icon-only dropdown menu */}
+  <div className="relative">
+    <details className="group">
+      <summary className="list-none flex items-center justify-center w-9 h-9 rounded-lg
+ bg-white/70 border border-slate-200 shadow-sm hover:bg-slate-50 cursor-pointer">
+        <svg
+          className="w-4 h-4 text-slate-500 group-open:rotate-90 transition-transform"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M5 12h14M5 6h10M5 18h6"
+          />
+        </svg>
+      </summary>
+
+      <div className="absolute right-0 mt-2 w-44 bg-white border border-slate-200 rounded-xl shadow-lg py-1 z-50">
+        <button
+          onClick={() => navigate("/share-experience")}
+          className="w-full text-left px-4 py-2 text-sm text-slate-700 hover:bg-slate-50"
+        >
+          Share Experience
+        </button>
+        <button
+          onClick={() => navigate("/about")}
+          className="w-full text-left px-4 py-2 text-sm text-slate-700 hover:bg-slate-50"
+        >
+          About Us
+        </button>
+        <button
+          onClick={() => navigate("/chat")}
+          className="w-full text-left px-4 py-2 text-sm text-slate-700 hover:bg-slate-50"
+        >
+          Chat
+        </button>
+      </div>
+    </details>
+  </div>
+</div>
+
           </div>
         </div>
       </div>
@@ -466,3 +519,220 @@ export default function MyAccount() {
     </div>
   );
 }
+
+
+
+
+
+// import React, { useEffect, useState } from "react";
+// import axios from "axios";
+// import { useNavigate } from "react-router-dom";
+
+// // ✅ CORRECT API BASE
+// const API_BASE = "https://experience-9t2k.onrender.com/api";
+
+// const ExperienceCard = ({ exp, onDelete, onEdit }) => (
+//   <div className="group bg-white p-6 rounded-2xl shadow-sm hover:shadow-xl transition-all border border-slate-200">
+//     <h3 className="font-bold text-lg text-slate-900">{exp.company}</h3>
+//     <p className="text-sm text-indigo-600 mb-2">{exp.role}</p>
+//     <p className="text-sm text-slate-600 line-clamp-3">
+//       {exp.mainExperience || "No description provided"}
+//     </p>
+
+//     <div className="flex gap-3 mt-4">
+//       <button
+//         onClick={() => onEdit(exp._id)}
+//         className="px-4 py-2 text-sm bg-indigo-100 text-indigo-700 rounded"
+//       >
+//         Edit
+//       </button>
+//       <button
+//         onClick={() => onDelete(exp._id)}
+//         className="px-4 py-2 text-sm bg-rose-100 text-rose-700 rounded"
+//       >
+//         Delete
+//       </button>
+//     </div>
+//   </div>
+// );
+
+// export default function MyAccount() {
+//   const [myExperiences, setMyExperiences] = useState([]);
+//   const [user, setUser] = useState(null);
+//   const [bookmarks, setBookmarks] = useState([]);
+//   const [loading, setLoading] = useState(true);
+//   const [error, setError] = useState("");
+
+//   const navigate = useNavigate();
+//   const token = localStorage.getItem("token");
+//   const headers = { Authorization: `Bearer ${token}` };
+
+//   // ✅ SAFE BOOKMARK FETCH
+//   const fetchBookmarks = async (bookmarkIds = []) => {
+//     if (!bookmarkIds.length) {
+//       setBookmarks([]);
+//       return;
+//     }
+
+//     try {
+//       const results = await Promise.allSettled(
+//         bookmarkIds.map((id) =>
+//           axios.get(`${API_BASE}/share-experience/${id}`, { headers })
+//         )
+//       );
+
+//       const valid = results
+//         .filter((r) => r.status === "fulfilled" && r.value?.data)
+//         .map((r) => r.value.data);
+
+//       setBookmarks(valid);
+//     } catch (err) {
+//       console.error("Bookmark load failed:", err);
+//     }
+//   };
+
+//   // ✅ MAIN FETCH
+//   const fetchMyAccount = async () => {
+//     if (!token) {
+//       navigate("/login");
+//       return;
+//     }
+
+//     try {
+//       setLoading(true);
+//       setError("");
+
+//       const [userRes, expRes] = await Promise.all([
+//         axios.get(`${API_BASE}/me`, { headers }),
+//         axios.get(`${API_BASE}/my-experiences`, { headers }),
+//       ]);
+
+//       if (!userRes.data?.user) {
+//         throw new Error("Session expired");
+//       }
+
+//       setUser(userRes.data.user);
+//       setMyExperiences(Array.isArray(expRes.data) ? expRes.data : []);
+
+//       fetchBookmarks(userRes.data.user.bookmarks || []);
+//     } catch (err) {
+//       console.error("Account load error:", err);
+//       setError("Session expired. Please login again.");
+
+//       localStorage.removeItem("token");
+//       localStorage.removeItem("user");
+
+//       setTimeout(() => navigate("/login"), 1200);
+//     } finally {
+//       setLoading(false);
+//     }
+//   };
+
+//   useEffect(() => {
+//     fetchMyAccount();
+//   }, []);
+
+//   // ✅ DELETE EXPERIENCE (SAFE)
+//   const deletePost = async (id) => {
+//     if (!window.confirm("Delete this experience permanently?")) return;
+
+//     try {
+//       await axios.delete(`${API_BASE}/share-experience/${id}`, { headers });
+
+//       setMyExperiences((prev) => prev.filter((exp) => exp._id !== id));
+//       setBookmarks((prev) => prev.filter((b) => b._id !== id));
+//     } catch (err) {
+//       alert("Delete failed");
+//     }
+//   };
+
+//   // ✅ FULL LOGOUT FIX
+//   const handleLogout = () => {
+//     localStorage.removeItem("token");
+//     localStorage.removeItem("user");
+//     navigate("/login");
+//   };
+
+//   const handleEdit = (id) => navigate(`/edit/${id}`);
+
+//   // ✅ LOADING UI
+//   if (loading) {
+//     return (
+//       <div className="h-screen flex items-center justify-center">
+//         <div className="w-12 h-12 border-4 border-indigo-200 border-t-indigo-600 rounded-full animate-spin" />
+//       </div>
+//     );
+//   }
+
+//   // ✅ ERROR UI
+//   if (error && !user) {
+//     return (
+//       <div className="h-screen flex items-center justify-center">
+//         <div className="bg-white p-6 rounded shadow text-rose-600 text-center">
+//           {error}
+//           <div className="mt-4">
+//             <button
+//               onClick={() => navigate("/login")}
+//               className="bg-indigo-600 text-white px-4 py-2 rounded"
+//             >
+//               Login Again
+//             </button>
+//           </div>
+//         </div>
+//       </div>
+//     );
+//   }
+
+//   // ✅ MAIN UI
+//   return (
+//     <div className="min-h-screen bg-slate-100 p-6">
+//       <div className="flex justify-between mb-6">
+//         <h1 className="text-2xl font-bold">My Dashboard</h1>
+//         <button
+//           onClick={handleLogout}
+//           className="bg-slate-200 px-4 py-2 rounded"
+//         >
+//           Logout
+//         </button>
+//       </div>
+
+//       {/* ✅ MY EXPERIENCES */}
+//       <h2 className="text-lg font-semibold mb-3">My Experiences</h2>
+
+//       {myExperiences.length === 0 ? (
+//         <p className="text-slate-500">No experiences yet.</p>
+//       ) : (
+//         <div className="grid md:grid-cols-2 gap-4">
+//           {myExperiences.map((exp) => (
+//             <ExperienceCard
+//               key={exp._id}
+//               exp={exp}
+//               onEdit={handleEdit}
+//               onDelete={deletePost}
+//             />
+//           ))}
+//         </div>
+//       )}
+
+//       {/* ✅ BOOKMARKS */}
+//       <h2 className="text-lg font-semibold mt-10 mb-3">Bookmarks</h2>
+
+//       {bookmarks.length === 0 ? (
+//         <p className="text-slate-500">No bookmarks saved.</p>
+//       ) : (
+//         <div className="grid md:grid-cols-2 gap-4">
+//           {bookmarks.map((b) => (
+//             <div
+//               key={b._id}
+//               onClick={() => navigate(`/experience/${b._id}`)}
+//               className="cursor-pointer bg-white p-4 rounded border hover:shadow"
+//             >
+//               <p className="font-bold">{b.company}</p>
+//               <p className="text-sm text-slate-600">{b.role}</p>
+//             </div>
+//           ))}
+//         </div>
+//       )}
+//     </div>
+//   );
+// }

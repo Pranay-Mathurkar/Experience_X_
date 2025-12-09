@@ -1,3 +1,4 @@
+
 import mongoose, { Schema } from "mongoose";
 
 const roundSchema = new Schema({
@@ -18,7 +19,10 @@ const FormSchema = new Schema(
       ref: "User",
     },
 
+<<<<<<< HEAD
   
+=======
+>>>>>>> 5ebfe5a4516b9dfd6f31d2fd207c27b643c22e34
     company: { type: String, required: true },
     role: { type: String, required: true },
     location: { type: String, required: true },
@@ -45,7 +49,10 @@ const FormSchema = new Schema(
       default: "Medium",
     },
 
+<<<<<<< HEAD
   
+=======
+>>>>>>> 5ebfe5a4516b9dfd6f31d2fd207c27b643c22e34
     rating: {
       type: Number,
       min: 1,
@@ -53,19 +60,19 @@ const FormSchema = new Schema(
       required: true,
     },
 
-    // Tags from comma-separated input
     tags: [{ type: String, required: true }],
 
-    // Compensation (required in frontend now)
-    stipend: { type: String, required: true },
-    baseSalary: { type: String, required: true },
-    stocks: { type: String, required: true },
+    stipend: { type: String, default: "" },
+    baseSalary: { type: String, default: "" },
+    stocks: { type: String, default: "" },
 
-    // Experience
     mainExperience: { type: String, required: true },
     tips: { type: String, required: true },
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 5ebfe5a4516b9dfd6f31d2fd207c27b643c22e34
     rounds: {
       type: [roundSchema],
       validate: {
@@ -78,6 +85,9 @@ const FormSchema = new Schema(
   { timestamps: true }
 );
 
-const InterviewExperience = mongoose.model("InterviewExperience", FormSchema);
+const InterviewExperience = mongoose.model(
+  "InterviewExperience",
+  FormSchema
+);
 
 export { InterviewExperience };

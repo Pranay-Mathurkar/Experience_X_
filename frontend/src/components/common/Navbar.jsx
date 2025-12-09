@@ -8,6 +8,7 @@ export function Navbar() {
   
   const navigate = useNavigate();
   const { user, handleLogout } = useAuth(); 
+
   const isLoggedIn = !!user;
 
   useEffect(() => {
@@ -36,7 +37,6 @@ export function Navbar() {
         <div className="max-w-7xl mx-auto px-4 sm:px-8">
           <div className="flex justify-between items-center">
             
-            {/* Logo */}
             <div 
               className="flex items-center gap-3 cursor-pointer group" 
               onClick={() => navigate('/')}
@@ -53,7 +53,6 @@ export function Navbar() {
               </span>
             </div>
 
-            {/* Desktop Nav */}
             <div className="hidden md:flex items-center gap-8">
               {navLinks.map((link) => (
                 <NavLink
@@ -69,7 +68,6 @@ export function Navbar() {
                 </NavLink>
               ))}
               
-              {/* Chat Link (Only if logged in) */}
               {isLoggedIn && (
                 <button
                   onClick={() => navigate("/chat")}
@@ -80,7 +78,6 @@ export function Navbar() {
               )}
             </div>
 
-            {/* Desktop Auth Buttons */}
             <div className="hidden md:flex items-center gap-4">
               {!isLoggedIn ? (
                 <>
@@ -115,7 +112,6 @@ export function Navbar() {
               )}
             </div>
 
-            {/* Mobile Toggle */}
             <div className="md:hidden">
               <button
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -131,7 +127,6 @@ export function Navbar() {
           </div>
         </div>
 
-        {/* Mobile Menu */}
         <div
           className={`md:hidden absolute top-full left-0 right-0 bg-white border-b border-purple-100 shadow-xl transition-all duration-300 ease-in-out overflow-hidden ${
             isMobileMenuOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
@@ -152,7 +147,6 @@ export function Navbar() {
               </NavLink>
             ))}
             
-            {/* Mobile Chat Button */}
             {isLoggedIn && (
               <button
                 onClick={() => {
@@ -175,8 +169,8 @@ export function Navbar() {
                 </>
               ) : (
                 <>
-                   <div className="text-center text-sm font-medium text-slate-500 pb-2">Signed in as {user?.name}</div>
-                   <button onClick={handleLogout} className="w-full py-2.5 text-white font-semibold bg-red-500 rounded-lg shadow-md active:scale-95 transition-transform">Logout</button>
+                    <div className="text-center text-sm font-medium text-slate-500 pb-2">Signed in as {user?.name}</div>
+                    <button onClick={handleLogout} className="w-full py-2.5 text-white font-semibold bg-red-500 rounded-lg shadow-md active:scale-95 transition-transform">Logout</button>
                 </>
               )}
             </div>

@@ -148,6 +148,27 @@ export default function AboutPage() {
             ))}
           </div>
         </div>
+
+        {/* Call to action - Integrated with correct theme and navigation */}
+        <div className="mt-24 max-w-5xl mx-auto">
+          <div className="rounded-3xl border border-slate-200 bg-white p-8 shadow-lg shadow-purple-900/5 flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+            <div>
+              <h2 className="text-xl md:text-2xl font-bold text-slate-900 mb-2">
+                Ready to help someone crack their next interview?
+              </h2>
+              <p className="text-slate-600">
+                Share your recent interview experience and make the process easier for the next person.
+              </p>
+            </div>
+            <button
+              onClick={() => navigate('/share-experience')}
+              className="inline-flex items-center justify-center px-8 py-3 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-bold shadow-lg shadow-purple-500/30 hover:shadow-purple-500/50 hover:scale-105 transition-all duration-300"
+            >
+              Share your experience
+            </button>
+          </div>
+        </div>
+
       </div>
 
       <Footer />

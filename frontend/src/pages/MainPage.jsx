@@ -1,15 +1,12 @@
-import React from "react";
+import React, { useState } from "react";
 import { Navbar } from "../components/common/Navbar";
 import { SearchBar } from "../components/common/SearchBar";
-
 import { CompanyGrid } from "../components/mainPage/CompanyGrid";
 import { AddCompanyButton } from "../components/mainPage/AddCompanyButton";
-import { useState } from "react";
-
 import { Footer } from "../components/common/Footer";
 
 export default function MainPage() {
-  const [search, setSearch] = useState(""); // ✅ GLOBAL SEARCH
+  const [search, setSearch] = useState("");
 
   return (
     <div className="min-h-screen bg-slate-50 font-sans selection:bg-purple-100 selection:text-purple-900 overflow-x-hidden relative">
@@ -36,12 +33,12 @@ export default function MainPage() {
           </div>
 
           <div className="w-full max-w-2xl">
-            <SearchBar />
+            <SearchBar setSearch={setSearch} />
           </div>
         </div>
 
         <div className="animate-fade-in-up delay-100">
-          <CompanyGrid />
+          <CompanyGrid search={search} />
         </div>
 
         <div className="animate-fade-in-up delay-200">
